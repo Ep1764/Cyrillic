@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyrillic — Learn Russian</title>
+<meta name="description" content="A complete, self-contained Russian learning app: alphabet, reading, vocabulary, grammar, listening and conversation practice.">
+<style>
+:root{
+  --bg:#f4f6fb;
+  --bg-elevated:#ffffff;
+  --card:#ffffff;
+  --card-hover:#fbfcff;
+  --border:#e2e6f0;
+  --text:#1a2138;
+  --text-dim:#5b6478;
+  --text-faint:#8890a4;
+  --accent:#4a5df0;
+  --accent-hover:#3d4fd6;
+  --accent-dim:#eaecfe;
+  --accent-text:#ffffff;
+  --success:#1f9d55;
+  --success-bg:#e6f7ec;
+  --error:#dc3236;
+  --error-bg:#fdeaea;
+  --warn:#b9790f;
+  --warn-bg:#fdf3e0;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 2px 12px rgba(20,30,70,.06);
+  --shadow-lg:0 8px 30px rgba(20,30,70,.10);
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-ru:"Segoe UI","PT Sans","Helvetica Neue",Arial,sans-serif;
+  color-scheme: light;
+}
+[data-theme="dark"]{
+  --bg:#0e1220;
+  --bg-elevated:#161c2e;
+  --card:#161c2e;
+  --card-hover:#1b2236;
+  --border:#2a3149;
+  --text:#eef1fb;
+  --text-dim:#a3abc4;
+  --text-faint:#727ba0;
+  --accent:#7c8cff;
+  --accent-hover:#94a2ff;
+  --accent-dim:#242c4a;
+  --accent-text:#0e1220;
+  --success:#3ecb7e;
+  --success-bg:#123320;
+  --error:#ff6a6e;
+  --error-bg:#3a1c1f;
+  --warn:#e3ab52;
+  --warn-bg:#3a2e15;
+  --shadow:0 2px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1220; --bg-elevated:#161c2e; --card:#161c2e; --card-hover:#1b2236;
+    --border:#2a3149; --text:#eef1fb; --text-dim:#a3abc4; --text-faint:#727ba0;
+    --accent:#7c8cff; --accent-hover:#94a2ff; --accent-dim:#242c4a; --accent-text:#0e1220;
+    --success:#3ecb7e; --success-bg:#123320; --error:#ff6a6e; --error-bg:#3a1c1f;
+    --warn:#e3ab52; --warn-bg:#3a2e15;
+    --shadow:0 2px 16px rgba(0,0,0,.35); --shadow-lg:0 10px 40px rgba(0,0,0,.45);
+    color-scheme: dark;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-ui);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  padding-bottom:76px;
+}
+button,input,select,textarea{font-family:inherit;}
+a{color:inherit;}
+.ru{font-family:var(--font-ru);}
+h1,h2,h3,h4{margin:0 0 6px;line-height:1.25;}
+p{margin:0 0 10px;}
+.hidden{display:none !important;}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+/* ---------- Top bar ---------- */
+#topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
+  background:var(--bg-elevated);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(6px);
+}
+#topbar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;letter-spacing:.2px;cursor:pointer;user-select:none;}
+#topbar .brand .mark{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-text);
+  font-family:var(--font-ru);font-weight:800;font-size:1rem;
+}
+#topbar .spacer{flex:1;}
+.streak-pill{
+  display:flex;align-items:center;gap:5px;font-weight:700;font-size:.85rem;
+  padding:5px 10px;border-radius:999px;background:var(--warn-bg);color:var(--warn);
+  white-space:nowrap;
+}
+.xp-pill{
+  display:flex;align-items:center;gap:5px;font-weight:700;font-size:.85rem;
+  padding:5px 10px;border-radius:999px;background:var(--accent-dim);color:var(--accent);
+  white-space:nowrap;
+}
+.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:9px;border:1px solid var(--border);
+  background:var(--bg-elevated);color:var(--text-dim);cursor:pointer;font-size:1rem;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.icon-btn:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-dim);}
+
+/* ---------- Nav ---------- */
+#nav{
+  display:flex;gap:4px;overflow-x:auto;padding:8px 12px;
+  background:var(--bg-elevated);border-bottom:1px solid var(--border);
+  position:sticky;top:53px;z-index:39;
+  scrollbar-width:none;
+}
+#nav::-webkit-scrollbar{display:none;}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 12px;border-radius:11px;border:none;background:transparent;
+  color:var(--text-dim);cursor:pointer;font-size:.72rem;font-weight:600;
+  white-space:nowrap;min-width:60px;flex-shrink:0;
+  transition:background .15s,color .15s;
+}
+.nav-btn .ico{font-size:1.15rem;line-height:1;}
+.nav-btn:hover{background:var(--accent-dim);color:var(--accent);}
+.nav-btn.active{background:var(--accent);color:var(--accent-text);}
+
+/* ---------- Layout ---------- */
+#view-root{max-width:920px;margin:0 auto;padding:18px 16px 40px;}
+.view{animation:fadein .18s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);margin-bottom:14px;
+}
+.card h3{font-size:1rem;}
+.card-row{display:flex;gap:14px;flex-wrap:wrap;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media (max-width:640px){.grid-2,.grid-3{grid-template-columns:1fr 1fr;}}
+@media (max-width:420px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+.stat-tile{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:14px;text-align:center;
+}
+.stat-tile .num{font-size:1.5rem;font-weight:800;color:var(--accent);}
+.stat-tile .lbl{font-size:.75rem;color:var(--text-dim);margin-top:2px;}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 18px;border-radius:12px;border:1px solid var(--border);
+  background:var(--bg-elevated);color:var(--text);font-weight:700;font-size:.92rem;
+  cursor:pointer;transition:transform .08s,background .15s,border-color .15s;
+}
+.btn:active{transform:scale(.97);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.btn.primary:hover{background:var(--accent-hover);}
+.btn.ghost{background:transparent;}
+.btn.block{width:100%;}
+.btn.sm{padding:7px 12px;font-size:.82rem;border-radius:9px;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.success{background:var(--success);border-color:var(--success);color:#fff;}
+
+.progress-bar{height:8px;border-radius:99px;background:var(--accent-dim);overflow:hidden;}
+.progress-bar > div{height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease;}
+.progress-bar.thin{height:5px;}
+
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:700;background:var(--accent-dim);color:var(--accent);}
+.pill.locked{background:var(--border);color:var(--text-faint);}
+.pill.done{background:var(--success-bg);color:var(--success);}
+.pill.warn{background:var(--warn-bg);color:var(--warn);}
+
+/* ---------- Dashboard ---------- */
+.hero{
+  background:linear-gradient(135deg,var(--accent-dim),var(--card));
+  border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px;
+}
+.hero .level-name{font-size:1.3rem;font-weight:800;}
+.hero .lesson-name{color:var(--text-dim);font-size:.92rem;margin-bottom:12px;}
+
+/* ---------- Letter / vocab cards ---------- */
+.letter-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;text-align:center;
+}
+.letter-big{font-family:var(--font-ru);font-size:4rem;font-weight:800;line-height:1;color:var(--accent);}
+.letter-meta{margin-top:10px;font-size:.9rem;color:var(--text-dim);}
+.letter-meta b{color:var(--text);}
+.example-ru{font-family:var(--font-ru);font-size:1.4rem;font-weight:700;}
+
+.vocab-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;
+}
+.vocab-ru{font-family:var(--font-ru);font-weight:700;font-size:1.15rem;}
+.vocab-tr{color:var(--text-faint);font-size:.82rem;}
+.vocab-en{color:var(--text-dim);font-size:.92rem;}
+
+.speak-btn{
+  border:1px solid var(--border);background:var(--bg-elevated);color:var(--accent);
+  width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.speak-btn:hover{background:var(--accent-dim);}
+.speak-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+/* ---------- Exercise screen ---------- */
+#exercise-wrap{max-width:640px;margin:0 auto;}
+.ex-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.ex-progress .progress-bar{flex:1;}
+.ex-progress .count{font-size:.8rem;color:var(--text-dim);font-weight:700;white-space:nowrap;}
+.ex-close{cursor:pointer;color:var(--text-dim);font-size:1.3rem;line-height:1;padding:4px 8px;}
+
+.ex-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 22px;text-align:center;}
+.ex-kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);font-weight:700;margin-bottom:10px;}
+.ex-prompt{font-family:var(--font-ru);font-size:2.3rem;font-weight:800;margin:6px 0;word-break:break-word;}
+.ex-prompt.small{font-size:1.5rem;}
+.ex-prompt-en{font-size:1.5rem;font-weight:700;}
+.ex-sub{color:var(--text-dim);font-size:.92rem;margin-bottom:6px;}
+
+.ex-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
+@media (max-width:480px){.ex-options{grid-template-columns:1fr;}}
+.opt-btn{
+  padding:14px 12px;border-radius:12px;border:2px solid var(--border);background:var(--bg-elevated);
+  color:var(--text);font-weight:600;cursor:pointer;font-size:1rem;text-align:center;
+  transition:border-color .12s,background .12s,transform .08s;font-family:var(--font-ru);
+}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim);}
+.opt-btn:active:not(:disabled){transform:scale(.98);}
+.opt-btn.correct{border-color:var(--success);background:var(--success-bg);color:var(--success);}
+.opt-btn.wrong{border-color:var(--error);background:var(--error-bg);color:var(--error);}
+.opt-btn:disabled{cursor:default;}
+
+.ex-input-row{display:flex;gap:10px;margin-top:20px;}
+.ex-text-input{
+  flex:1;padding:13px 14px;border-radius:12px;border:2px solid var(--border);
+  background:var(--bg-elevated);color:var(--text);font-size:1.1rem;font-family:var(--font-ru);
+}
+.ex-text-input:focus{outline:none;border-color:var(--accent);}
+.ex-text-input.correct{border-color:var(--success);}
+.ex-text-input.wrong{border-color:var(--error);}
+
+.order-tokens{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:48px;margin:16px 0;padding:10px;border:2px dashed var(--border);border-radius:12px;}
+.order-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;}
+.token-btn{
+  padding:9px 14px;border-radius:9px;border:1px solid var(--border);background:var(--bg-elevated);
+  font-family:var(--font-ru);font-weight:700;font-size:1rem;cursor:pointer;
+}
+.token-btn:hover{background:var(--accent-dim);}
+.token-btn.placed{opacity:.35;cursor:default;}
+
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:16px;}
+.match-item{
+  padding:12px 10px;border-radius:10px;border:2px solid var(--border);background:var(--bg-elevated);
+  cursor:pointer;font-size:.95rem;text-align:center;font-family:var(--font-ru);
+}
+.match-item.left{font-weight:700;}
+.match-item.selected{border-color:var(--accent);background:var(--accent-dim);}
+.match-item.matched{border-color:var(--success);background:var(--success-bg);color:var(--success);opacity:.7;cursor:default;}
+.match-item.mismatch{border-color:var(--error);background:var(--error-bg);}
+
+.feedback-box{margin-top:18px;padding:16px;border-radius:12px;text-align:left;}
+.feedback-box.correct{background:var(--success-bg);border:1px solid var(--success);}
+.feedback-box.wrong{background:var(--error-bg);border:1px solid var(--error);}
+.feedback-title{font-weight:800;font-size:1rem;margin-bottom:4px;}
+.feedback-box.correct .feedback-title{color:var(--success);}
+.feedback-box.wrong .feedback-title{color:var(--error);}
+.feedback-answer{font-family:var(--font-ru);font-weight:700;font-size:1.1rem;margin:4px 0;}
+.feedback-explain{color:var(--text-dim);font-size:.88rem;line-height:1.5;}
+
+.ex-footer{margin-top:20px;display:flex;justify-content:flex-end;}
+
+/* ---------- Lesson list ---------- */
+.level-block{margin-bottom:22px;}
+.level-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.level-header .lvl-num{
+  width:30px;height:30px;border-radius:9px;background:var(--accent-dim);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0;
+}
+.level-header h3{font-size:1.02rem;}
+.level-header .lvl-sub{font-size:.78rem;color:var(--text-faint);}
+.lesson-item{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;
+  border:1px solid var(--border);background:var(--card);margin-bottom:8px;cursor:pointer;
+  transition:background .12s;
+}
+.lesson-item:hover{background:var(--card-hover);}
+.lesson-item.locked{opacity:.5;cursor:not-allowed;}
+.lesson-item .li-ico{font-size:1.3rem;width:30px;text-align:center;flex-shrink:0;}
+.lesson-item .li-body{flex:1;min-width:0;}
+.lesson-item .li-title{font-weight:700;font-size:.94rem;}
+.lesson-item .li-sub{font-size:.78rem;color:var(--text-faint);}
+.check-badge{color:var(--success);font-size:1.2rem;flex-shrink:0;}
+
+/* ---------- Teach cards ---------- */
+.teach-card{max-width:560px;margin:0 auto;}
+.teach-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+.teach-dots{display:flex;gap:5px;}
+.teach-dots span{width:6px;height:6px;border-radius:50%;background:var(--border);}
+.teach-dots span.active{background:var(--accent);width:16px;border-radius:4px;}
+
+.grammar-block{margin-bottom:10px;line-height:1.6;font-size:.96rem;color:var(--text-dim);}
+.grammar-block b{color:var(--text);}
+.example-line{
+  background:var(--accent-dim);border-radius:10px;padding:10px 14px;margin:8px 0;
+}
+.example-line .ru{font-size:1.15rem;font-weight:700;color:var(--text);}
+.example-line .tr{color:var(--text-faint);font-size:.82rem;}
+.example-line .en{color:var(--text-dim);font-size:.9rem;margin-top:2px;}
+.compare-box{display:flex;gap:12px;margin:10px 0;flex-wrap:wrap;}
+.compare-box .half{flex:1;min-width:180px;padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--border);}
+.compare-box .half .k{font-size:.72rem;text-transform:uppercase;color:var(--text-faint);font-weight:700;}
+
+/* ---------- Chat / conversation ---------- */
+.chat-log{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;min-height:120px;}
+.chat-bubble{max-width:78%;padding:11px 15px;border-radius:16px;font-family:var(--font-ru);font-size:1.02rem;line-height:1.4;}
+.chat-bubble.bot{background:var(--accent-dim);align-self:flex-start;border-bottom-left-radius:4px;}
+.chat-bubble.user{background:var(--accent);color:var(--accent-text);align-self:flex-end;border-bottom-right-radius:4px;}
+.chat-bubble .tr{display:block;font-family:var(--font-ui);font-size:.72rem;opacity:.75;margin-top:3px;}
+.chat-en{font-size:.78rem;color:var(--text-faint);align-self:inherit;margin-top:-6px;}
+
+/* ---------- misc ---------- */
+.section-title{font-size:1.1rem;font-weight:800;margin:22px 0 10px;}
+.section-title:first-child{margin-top:0;}
+.muted{color:var(--text-dim);font-size:.9rem;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-faint);}
+.empty-state .ico{font-size:2.2rem;margin-bottom:8px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}
+.tag-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg-elevated);font-size:.8rem;font-weight:700;cursor:pointer;color:var(--text-dim);}
+.tag-btn.active{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.toast{
+  position:fixed;bottom:86px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;
+  font-size:.85rem;font-weight:600;z-index:200;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+.rate-row{display:flex;gap:8px;justify-content:center;margin:14px 0;flex-wrap:wrap;}
+.confusion-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.confusion-row:last-child{border-bottom:none;}
+.confusion-pair{font-family:var(--font-ru);font-weight:800;font-size:1.1rem;}
+table.simple{width:100%;border-collapse:collapse;font-size:.88rem;}
+table.simple th,table.simple td{padding:8px 6px;border-bottom:1px solid var(--border);text-align:left;}
+table.simple th{color:var(--text-faint);font-size:.75rem;text-transform:uppercase;}
+::selection{background:var(--accent);color:var(--accent-text);}
+body.hide-translit .vocab-tr,
+body.hide-translit .tr,
+body.hide-translit .translit{display:none !important;}
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand" data-nav="dashboard"><span class="mark">Я</span><span>Cyrillic</span></div>
+  <div class="spacer"></div>
+  <div class="streak-pill" id="streak-pill">🔥 <span id="streak-num">0</span></div>
+  <div class="xp-pill" id="xp-pill">⭐ <span id="xp-num">0</span></div>
+  <button class="icon-btn" id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+</header>
+
+<nav id="nav">
+  <button class="nav-btn" data-nav="dashboard"><span class="ico">🏠</span>Home</button>
+  <button class="nav-btn" data-nav="learn"><span class="ico">📘</span>Learn</button>
+  <button class="nav-btn" data-nav="practice"><span class="ico">🎯</span>Practice</button>
+  <button class="nav-btn" data-nav="review"><span class="ico">🔁</span>Review</button>
+  <button class="nav-btn" data-nav="listening"><span class="ico">🎧</span>Listen</button>
+  <button class="nav-btn" data-nav="vocab"><span class="ico">📚</span>Vocab</button>
+  <button class="nav-btn" data-nav="grammar"><span class="ico">🧩</span>Grammar</button>
+  <button class="nav-btn" data-nav="conversation"><span class="ico">💬</span>Talk</button>
+  <button class="nav-btn" data-nav="progress"><span class="ico">📊</span>Progress</button>
+</nav>
+
+<main id="view-root">
+  <div id="view-dashboard" class="view"></div>
+  <div id="view-learn" class="view hidden"></div>
+  <div id="view-practice" class="view hidden"></div>
+  <div id="view-review" class="view hidden"></div>
+  <div id="view-listening" class="view hidden"></div>
+  <div id="view-vocab" class="view hidden"></div>
+  <div id="view-grammar" class="view hidden"></div>
+  <div id="view-conversation" class="view hidden"></div>
+  <div id="view-progress" class="view hidden"></div>
+  <div id="view-lesson" class="view hidden"></div>
+  <div id="view-exercise" class="view hidden"></div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   DATA — ALPHABET
+   ========================================================================= */
+const LETTER_GROUPS = [
+  {title:"The Easy Start", note:"These five look or sound close to what you already know."},
+  {title:"False Friends", note:"These LOOK like English letters but make totally different sounds. This is the #1 trap for beginners — slow down here."},
+  {title:"New Sounds", note:"A few new shapes and one classic 'clear your throat' sound."},
+  {title:"More Consonants", note:"Rounding out the main consonant set."},
+  {title:"The Special Five", note:"Ё, Й, Ы, Ь and Е don't behave like ordinary letters — read the notes carefully."},
+  {title:"Iotated & Hissing", note:"Ю and Я 'glide' like Е does, plus three sounds English doesn't spell with one letter."},
+  {title:"The Last Three", note:"One rare sound, one silent sign, and one easy one. After this you know all 33!"}
+];
+const ALPHABET = [
+  {up:"А",lo:"а",name:"a",nameTr:"ah",sound:"Like the “a” in “father”.",ex:"мама",exTr:"MA-ma",exEn:"mom",group:1,type:"vowel"},
+  {up:"О",lo:"о",name:"о",nameTr:"oh",sound:"Like the “o” in “more” when stressed. Unstressed, it relaxes toward “a” — more on that later.",ex:"он",exTr:"on",exEn:"he",group:1,type:"vowel"},
+  {up:"М",lo:"м",name:"эм",nameTr:"em",sound:"Exactly like the English “m”.",ex:"мама",exTr:"MA-ma",exEn:"mom",group:1,type:"consonant"},
+  {up:"Т",lo:"т",name:"тэ",nameTr:"teh",sound:"Like English “t”, but softer — touch your tongue to the back of your teeth, not the ridge above them.",ex:"там",exTr:"tam",exEn:"there",group:1,type:"consonant"},
+  {up:"К",lo:"к",name:"ка",nameTr:"kah",sound:"Exactly like the English “k”.",ex:"кто",exTr:"kto",exEn:"who",group:1,type:"consonant"},
+
+  {up:"Н",lo:"н",name:"эн",nameTr:"en",sound:"Sounds like English “N” — NOT “H”, even though it looks like one!",ex:"но",exTr:"no",exEn:"but",group:2,type:"consonant"},
+  {up:"В",lo:"в",name:"вэ",nameTr:"veh",sound:"Sounds like English “V” — NOT “B”.",ex:"вода",exTr:"va-DA",exEn:"water",group:2,type:"consonant"},
+  {up:"Р",lo:"р",name:"эр",nameTr:"er",sound:"A rolled/trilled “R” (like Spanish) — NOT the English “P” sound it looks like.",ex:"рука",exTr:"ru-KA",exEn:"hand / arm",group:2,type:"consonant"},
+  {up:"С",lo:"с",name:"эс",nameTr:"es",sound:"Sounds like English “S” — NOT “C” as in “cat”.",ex:"сок",exTr:"sok",exEn:"juice",group:2,type:"consonant"},
+  {up:"У",lo:"у",name:"у",nameTr:"oo",sound:"Sounds like “oo” in “moon” — NOT like the “U” it looks like.",ex:"улица",exTr:"OO-li-tsa",exEn:"street",group:2,type:"vowel"},
+
+  {up:"Э",lo:"э",name:"э",nameTr:"eh",sound:"Like “e” in “bed” or “met”.",ex:"это",exTr:"EH-ta",exEn:"this / it",group:3,type:"vowel"},
+  {up:"Х",lo:"х",name:"ха",nameTr:"khah",sound:"A raspy “h” from the back of the throat, like Scottish “loch” or German “bach”.",ex:"хорошо",exTr:"kha-ra-SHO",exEn:"good / well",group:3,type:"consonant"},
+  {up:"З",lo:"з",name:"зэ",nameTr:"zeh",sound:"Exactly like English “Z”.",ex:"зима",exTr:"zi-MA",exEn:"winter",group:3,type:"consonant"},
+  {up:"И",lo:"и",name:"и",nameTr:"ee",sound:"Like “ee” in “see”.",ex:"и",exTr:"ee",exEn:"and",group:3,type:"vowel"},
+  {up:"П",lo:"п",name:"пэ",nameTr:"peh",sound:"Like English “p”, but without the puff of air — press your lips and release softly.",ex:"папа",exTr:"PA-pa",exEn:"dad",group:3,type:"consonant"},
+
+  {up:"Л",lo:"л",name:"эл",nameTr:"el",sound:"Like English “L”, but darker — pull the back of your tongue up slightly.",ex:"лампа",exTr:"LAM-pa",exEn:"lamp",group:4,type:"consonant"},
+  {up:"Г",lo:"г",name:"гэ",nameTr:"geh",sound:"Exactly like the “g” in “go”.",ex:"город",exTr:"GO-rat",exEn:"city",group:4,type:"consonant"},
+  {up:"Д",lo:"д",name:"дэ",nameTr:"deh",sound:"Like English “d”, tongue against the back of the teeth.",ex:"да",exTr:"da",exEn:"yes",group:4,type:"consonant"},
+  {up:"Б",lo:"б",name:"бэ",nameTr:"beh",sound:"Exactly like English “B”.",ex:"брат",exTr:"brat",exEn:"brother",group:4,type:"consonant"},
+  {up:"Ж",lo:"ж",name:"жэ",nameTr:"zheh",sound:"Like the “s” in “measure” or “pleasure”.",ex:"жена",exTr:"zhi-NA",exEn:"wife",group:4,type:"consonant"},
+
+  {up:"Е",lo:"е",name:"е",nameTr:"yeh",sound:"Like “ye” in “yes”. It also softens the consonant before it.",ex:"небо",exTr:"NYE-ba",exEn:"sky",group:5,type:"vowel"},
+  {up:"Ё",lo:"ё",name:"ё",nameTr:"yo",sound:"Like “yo” in “yo-yo”. Always stressed — and the two dots are often dropped in normal writing, so context tells you it's there.",ex:"ёлка",exTr:"YOL-ka",exEn:"fir tree / Christmas tree",group:5,type:"vowel"},
+  {up:"Й",lo:"й",name:"и краткое",nameTr:"ee-krat-ko-ye (“short i”)",sound:"A quick “y” glide, like the “y” in “boy”. It never forms its own syllable.",ex:"мой",exTr:"moy",exEn:"my (masculine)",group:5,type:"consonant"},
+  {up:"Ы",lo:"ы",name:"ы",nameTr:"—",sound:"No English equivalent. Say “ee” but pull your tongue back and down, deep in your throat. Practice by saying “roses” without moving your lips.",ex:"мы",exTr:"my",exEn:"we",group:5,type:"vowel"},
+  {up:"Ь",lo:"ь",name:"мягкий знак",nameTr:"MYAKH-kiy znak (“soft sign”)",sound:"Makes no sound of its own — it softens the consonant right before it. Say the consonant with your tongue pressed toward the roof of your mouth.",ex:"мать",exTr:"mat’",exEn:"mother",group:5,type:"sign"},
+
+  {up:"Ю",lo:"ю",name:"ю",nameTr:"yoo",sound:"Like “u” in “use” / “you”.",ex:"юг",exTr:"yug",exEn:"south",group:6,type:"vowel"},
+  {up:"Я",lo:"я",name:"я",nameTr:"yah",sound:"Like “ya” in “yard”.",ex:"я",exTr:"ya",exEn:"I",group:6,type:"vowel"},
+  {up:"Ц",lo:"ц",name:"цэ",nameTr:"tseh",sound:"Like “ts” in “cats”, said as a single sound.",ex:"цвет",exTr:"tsvyet",exEn:"color",group:6,type:"consonant"},
+  {up:"Ч",lo:"ч",name:"чэ",nameTr:"cheh",sound:"Like “ch” in “cheese”.",ex:"час",exTr:"chas",exEn:"hour / o’clock",group:6,type:"consonant"},
+  {up:"Ш",lo:"ш",name:"ша",nameTr:"shah",sound:"Like “sh” in “shoe”, but harder and flatter.",ex:"школа",exTr:"SHKO-la",exEn:"school",group:6,type:"consonant"},
+
+  {up:"Щ",lo:"щ",name:"ща",nameTr:"shchah",sound:"A long, soft “shch” — like saying “fresh cheese” fast and mushing it together.",ex:"щи",exTr:"shchi",exEn:"cabbage soup",group:7,type:"consonant"},
+  {up:"Ъ",lo:"ъ",name:"твёрдый знак",nameTr:"TVYOR-diy znak (“hard sign”)",sound:"Silent — it just keeps two sounds from blending into one another. Rare, mostly after prefixes.",ex:"объект",exTr:"ab-YEKT",exEn:"object",group:7,type:"sign"},
+  {up:"Ф",lo:"ф",name:"эф",nameTr:"ef",sound:"Exactly like English “F”.",ex:"фото",exTr:"FO-ta",exEn:"photo",group:7,type:"consonant"}
+];
+ALPHABET.forEach((l,i)=>{ l.id="L_"+l.up; l.idx=i; });
+function lettersInGroup(g){ return ALPHABET.filter(l=>l.group===g); }
+/* =========================================================================
+   DATA — VOCABULARY
+   Each entry: ru (Russian), tr (transliteration, stressed syllable CAPS), en (meaning,
+   "/" separates acceptable alternate translations), cat (category key)
+   ========================================================================= */
+const VOCAB_CATEGORIES = [
+  {key:"greetings", title:"Greetings & Courtesy", icon:"👋"},
+  {key:"people", title:"People & Pronouns", icon:"🧑"},
+  {key:"family", title:"Family", icon:"👪"},
+  {key:"numbers", title:"Numbers", icon:"🔢"},
+  {key:"food", title:"Food", icon:"🍞"},
+  {key:"drinks", title:"Drinks", icon:"🥤"},
+  {key:"places", title:"Places", icon:"🏙️"},
+  {key:"time", title:"Time", icon:"🕒"},
+  {key:"actions", title:"Everyday Actions", icon:"🏃"},
+  {key:"emotions", title:"Emotions", icon:"😊"},
+  {key:"questions", title:"Question Words", icon:"❓"},
+  {key:"verbs", title:"Common Verbs", icon:"🔧"},
+  {key:"adjectives", title:"Adjectives", icon:"✨"},
+  {key:"objects", title:"Everyday Objects", icon:"🎒"},
+  {key:"internet", title:"Internet & Social Media", icon:"📱"},
+  {key:"travel", title:"Travel", icon:"✈️"},
+  {key:"school", title:"School & Work", icon:"🏫"},
+  {key:"slang", title:"Informal Speech & Slang", icon:"😎"}
+];
+const VOCAB = [
+  // greetings
+  {ru:"привет",tr:"pree-VYET",en:"hi / hello (informal)",cat:"greetings"},
+  {ru:"здравствуйте",tr:"ZDRAS-tvuy-tye",en:"hello (formal)",cat:"greetings"},
+  {ru:"доброе утро",tr:"DOB-ra-ye OO-tra",en:"good morning",cat:"greetings"},
+  {ru:"добрый день",tr:"DOB-riy dyen’",en:"good afternoon",cat:"greetings"},
+  {ru:"добрый вечер",tr:"DOB-riy VYE-cher",en:"good evening",cat:"greetings"},
+  {ru:"спокойной ночи",tr:"spa-KOY-noy NO-chi",en:"good night",cat:"greetings"},
+  {ru:"пока",tr:"pa-KA",en:"bye (informal)",cat:"greetings"},
+  {ru:"до свидания",tr:"da svee-DA-nya",en:"goodbye (formal)",cat:"greetings"},
+  {ru:"спасибо",tr:"spa-SEE-ba",en:"thank you",cat:"greetings"},
+  {ru:"пожалуйста",tr:"pa-ZHAL-sta",en:"please / you’re welcome",cat:"greetings"},
+  {ru:"извините",tr:"eez-vee-NEE-tye",en:"excuse me / sorry (formal)",cat:"greetings"},
+  {ru:"да",tr:"da",en:"yes",cat:"greetings"},
+  {ru:"нет",tr:"nyet",en:"no",cat:"greetings"},
+  {ru:"как дела",tr:"kak dee-LA",en:"how are you / how’s it going",cat:"greetings"},
+  {ru:"приятно познакомиться",tr:"pri-YAT-na paz-na-KO-mi-tsa",en:"nice to meet you",cat:"greetings"},
+  // people
+  {ru:"я",tr:"ya",en:"I",cat:"people"},
+  {ru:"ты",tr:"ty",en:"you (informal)",cat:"people"},
+  {ru:"вы",tr:"vy",en:"you (formal / plural)",cat:"people"},
+  {ru:"он",tr:"on",en:"he",cat:"people"},
+  {ru:"она",tr:"a-NA",en:"she",cat:"people"},
+  {ru:"оно",tr:"a-NO",en:"it",cat:"people"},
+  {ru:"мы",tr:"my",en:"we",cat:"people"},
+  {ru:"они",tr:"a-NEE",en:"they",cat:"people"},
+  {ru:"человек",tr:"che-la-VYEK",en:"person",cat:"people"},
+  {ru:"друг",tr:"drook",en:"friend (male)",cat:"people"},
+  {ru:"подруга",tr:"pad-ROO-ga",en:"friend (female)",cat:"people"},
+  {ru:"мужчина",tr:"moo-SHCHEE-na",en:"man",cat:"people"},
+  {ru:"женщина",tr:"ZHEN-shchi-na",en:"woman",cat:"people"},
+  {ru:"ребёнок",tr:"ri-BYO-nak",en:"child",cat:"people"},
+  {ru:"имя",tr:"EE-mya",en:"name",cat:"people"},
+  // family
+  {ru:"семья",tr:"seem-YA",en:"family",cat:"family"},
+  {ru:"мама",tr:"MA-ma",en:"mom",cat:"family"},
+  {ru:"папа",tr:"PA-pa",en:"dad",cat:"family"},
+  {ru:"брат",tr:"brat",en:"brother",cat:"family"},
+  {ru:"сестра",tr:"sees-TRA",en:"sister",cat:"family"},
+  {ru:"сын",tr:"syn",en:"son",cat:"family"},
+  {ru:"дочь",tr:"doch’",en:"daughter",cat:"family"},
+  {ru:"муж",tr:"moozh",en:"husband",cat:"family"},
+  {ru:"жена",tr:"zhe-NA",en:"wife",cat:"family"},
+  {ru:"бабушка",tr:"BA-boosh-ka",en:"grandmother",cat:"family"},
+  {ru:"дедушка",tr:"DYE-doosh-ka",en:"grandfather",cat:"family"},
+  {ru:"родители",tr:"ra-DEE-tye-lee",en:"parents",cat:"family"},
+  {ru:"дядя",tr:"DYA-dya",en:"uncle",cat:"family"},
+  {ru:"тётя",tr:"TYO-tya",en:"aunt",cat:"family"},
+  // numbers
+  {ru:"ноль",tr:"nol’",en:"zero",cat:"numbers"},
+  {ru:"один",tr:"a-DEEN",en:"one",cat:"numbers"},
+  {ru:"два",tr:"dva",en:"two",cat:"numbers"},
+  {ru:"три",tr:"tree",en:"three",cat:"numbers"},
+  {ru:"четыре",tr:"chi-TY-rye",en:"four",cat:"numbers"},
+  {ru:"пять",tr:"pyat’",en:"five",cat:"numbers"},
+  {ru:"шесть",tr:"shest’",en:"six",cat:"numbers"},
+  {ru:"семь",tr:"syem’",en:"seven",cat:"numbers"},
+  {ru:"восемь",tr:"VO-seem’",en:"eight",cat:"numbers"},
+  {ru:"девять",tr:"DYE-veet’",en:"nine",cat:"numbers"},
+  {ru:"десять",tr:"DYE-seet’",en:"ten",cat:"numbers"},
+  {ru:"двадцать",tr:"DVAT-tsat’",en:"twenty",cat:"numbers"},
+  {ru:"сто",tr:"sto",en:"one hundred",cat:"numbers"},
+  // food
+  {ru:"еда",tr:"ye-DA",en:"food",cat:"food"},
+  {ru:"хлеб",tr:"khlyeb",en:"bread",cat:"food"},
+  {ru:"суп",tr:"soop",en:"soup",cat:"food"},
+  {ru:"мясо",tr:"MYA-sa",en:"meat",cat:"food"},
+  {ru:"рыба",tr:"RY-ba",en:"fish",cat:"food"},
+  {ru:"сыр",tr:"syr",en:"cheese",cat:"food"},
+  {ru:"яблоко",tr:"YA-bla-ka",en:"apple",cat:"food"},
+  {ru:"картошка",tr:"kar-TOSH-ka",en:"potato",cat:"food"},
+  {ru:"салат",tr:"sa-LAT",en:"salad",cat:"food"},
+  {ru:"торт",tr:"tort",en:"cake",cat:"food"},
+  {ru:"яйцо",tr:"yay-TSO",en:"egg",cat:"food"},
+  // drinks
+  {ru:"вода",tr:"va-DA",en:"water",cat:"drinks"},
+  {ru:"чай",tr:"chay",en:"tea",cat:"drinks"},
+  {ru:"кофе",tr:"KO-fye",en:"coffee",cat:"drinks"},
+  {ru:"сок",tr:"sok",en:"juice",cat:"drinks"},
+  {ru:"молоко",tr:"ma-la-KO",en:"milk",cat:"drinks"},
+  {ru:"пиво",tr:"PEE-va",en:"beer",cat:"drinks"},
+  {ru:"вино",tr:"vee-NO",en:"wine",cat:"drinks"},
+  // places
+  {ru:"дом",tr:"dom",en:"house / home",cat:"places"},
+  {ru:"школа",tr:"SHKO-la",en:"school",cat:"places"},
+  {ru:"работа",tr:"ra-BO-ta",en:"work",cat:"places"},
+  {ru:"город",tr:"GO-rat",en:"city",cat:"places"},
+  {ru:"магазин",tr:"ma-ga-ZEEN",en:"store / shop",cat:"places"},
+  {ru:"улица",tr:"OO-li-tsa",en:"street",cat:"places"},
+  {ru:"страна",tr:"stra-NA",en:"country",cat:"places"},
+  {ru:"россия",tr:"ra-SEE-ya",en:"Russia",cat:"places"},
+  {ru:"ресторан",tr:"rees-ta-RAN",en:"restaurant",cat:"places"},
+  {ru:"вокзал",tr:"vak-ZAL",en:"train station",cat:"places"},
+  // time
+  {ru:"время",tr:"VRYE-mya",en:"time",cat:"time"},
+  {ru:"сегодня",tr:"see-VOD-nya",en:"today",cat:"time"},
+  {ru:"завтра",tr:"ZAF-tra",en:"tomorrow",cat:"time"},
+  {ru:"вчера",tr:"fchee-RA",en:"yesterday",cat:"time"},
+  {ru:"сейчас",tr:"see-CHAS",en:"now",cat:"time"},
+  {ru:"утро",tr:"OO-tra",en:"morning",cat:"time"},
+  {ru:"день",tr:"dyen’",en:"day",cat:"time"},
+  {ru:"вечер",tr:"VYE-cher",en:"evening",cat:"time"},
+  {ru:"ночь",tr:"noch’",en:"night",cat:"time"},
+  {ru:"неделя",tr:"nee-DYE-lya",en:"week",cat:"time"},
+  {ru:"год",tr:"got",en:"year",cat:"time"},
+  // actions
+  {ru:"идти",tr:"eet-TEE",en:"to go (on foot)",cat:"actions"},
+  {ru:"есть",tr:"yest’",en:"to eat",cat:"actions"},
+  {ru:"пить",tr:"peet’",en:"to drink",cat:"actions"},
+  {ru:"спать",tr:"spat’",en:"to sleep",cat:"actions"},
+  {ru:"читать",tr:"chee-TAT’",en:"to read",cat:"actions"},
+  {ru:"писать",tr:"pee-SAT’",en:"to write",cat:"actions"},
+  {ru:"смотреть",tr:"sma-TRYET’",en:"to watch",cat:"actions"},
+  {ru:"слушать",tr:"SLOO-shat’",en:"to listen",cat:"actions"},
+  {ru:"отдыхать",tr:"at-dy-KHAT’",en:"to rest / relax",cat:"actions"},
+  {ru:"гулять",tr:"goo-LYAT’",en:"to stroll / hang out",cat:"actions"},
+  {ru:"готовить",tr:"ga-TO-veet’",en:"to cook",cat:"actions"},
+  // emotions
+  {ru:"счастливый",tr:"shchas-LEE-viy",en:"happy",cat:"emotions"},
+  {ru:"грустный",tr:"GROOST-niy",en:"sad",cat:"emotions"},
+  {ru:"злой",tr:"zloy",en:"angry",cat:"emotions"},
+  {ru:"уставший",tr:"oos-TAF-shiy",en:"tired",cat:"emotions"},
+  {ru:"весёлый",tr:"vee-SYO-liy",en:"cheerful / fun",cat:"emotions"},
+  {ru:"спокойный",tr:"spa-KOY-niy",en:"calm",cat:"emotions"},
+  {ru:"любить",tr:"lyu-BEET’",en:"to love",cat:"emotions"},
+  {ru:"нравиться",tr:"NRA-vee-tsa",en:"to be pleasing (to like)",cat:"emotions"},
+  {ru:"бояться",tr:"ba-YA-tsa",en:"to be afraid",cat:"emotions"},
+  // questions
+  {ru:"что",tr:"shto",en:"what",cat:"questions"},
+  {ru:"кто",tr:"kto",en:"who",cat:"questions"},
+  {ru:"где",tr:"gdye",en:"where",cat:"questions"},
+  {ru:"когда",tr:"kag-DA",en:"when",cat:"questions"},
+  {ru:"почему",tr:"pa-chee-MOO",en:"why",cat:"questions"},
+  {ru:"как",tr:"kak",en:"how",cat:"questions"},
+  {ru:"какой",tr:"ka-KOY",en:"which / what kind",cat:"questions"},
+  {ru:"сколько",tr:"SKOL’-ka",en:"how much / how many",cat:"questions"},
+  {ru:"куда",tr:"koo-DA",en:"where to",cat:"questions"},
+  // verbs
+  {ru:"быть",tr:"byt’",en:"to be",cat:"verbs"},
+  {ru:"иметь",tr:"ee-MYET’",en:"to have",cat:"verbs"},
+  {ru:"знать",tr:"znat’",en:"to know",cat:"verbs"},
+  {ru:"понимать",tr:"pa-nee-MAT’",en:"to understand",cat:"verbs"},
+  {ru:"говорить",tr:"ga-va-REET’",en:"to speak / say",cat:"verbs"},
+  {ru:"хотеть",tr:"kha-TYET’",en:"to want",cat:"verbs"},
+  {ru:"мочь",tr:"moch’",en:"to be able / can",cat:"verbs"},
+  {ru:"делать",tr:"DYE-lat’",en:"to do / make",cat:"verbs"},
+  {ru:"видеть",tr:"VEE-deet’",en:"to see",cat:"verbs"},
+  {ru:"жить",tr:"zhyt’",en:"to live",cat:"verbs"},
+  {ru:"думать",tr:"DOO-mat’",en:"to think",cat:"verbs"},
+  // adjectives
+  {ru:"хороший",tr:"kha-RO-shiy",en:"good",cat:"adjectives"},
+  {ru:"плохой",tr:"pla-KHOY",en:"bad",cat:"adjectives"},
+  {ru:"большой",tr:"bal’-SHOY",en:"big",cat:"adjectives"},
+  {ru:"маленький",tr:"MA-leen’-kiy",en:"small",cat:"adjectives"},
+  {ru:"новый",tr:"NO-viy",en:"new",cat:"adjectives"},
+  {ru:"старый",tr:"STA-riy",en:"old",cat:"adjectives"},
+  {ru:"красивый",tr:"kra-SEE-viy",en:"beautiful",cat:"adjectives"},
+  {ru:"быстрый",tr:"BYST-riy",en:"fast",cat:"adjectives"},
+  {ru:"лёгкий",tr:"LYOKH-kiy",en:"easy / light",cat:"adjectives"},
+  {ru:"трудный",tr:"TROOD-niy",en:"difficult",cat:"adjectives"},
+  {ru:"интересный",tr:"in-tee-RYES-niy",en:"interesting",cat:"adjectives"},
+  // objects
+  {ru:"телефон",tr:"tye-lye-FON",en:"phone",cat:"objects"},
+  {ru:"книга",tr:"KNEE-ga",en:"book",cat:"objects"},
+  {ru:"стол",tr:"stol",en:"table",cat:"objects"},
+  {ru:"стул",tr:"stool",en:"chair",cat:"objects"},
+  {ru:"окно",tr:"ak-NO",en:"window",cat:"objects"},
+  {ru:"дверь",tr:"dvyer’",en:"door",cat:"objects"},
+  {ru:"машина",tr:"ma-SHY-na",en:"car",cat:"objects"},
+  {ru:"компьютер",tr:"kam-PYU-ter",en:"computer",cat:"objects"},
+  {ru:"сумка",tr:"SOOM-ka",en:"bag",cat:"objects"},
+  {ru:"ключ",tr:"klyuch",en:"key",cat:"objects"},
+  {ru:"деньги",tr:"DYEN’-gee",en:"money",cat:"objects"},
+  // internet
+  {ru:"интернет",tr:"in-ter-NET",en:"internet",cat:"internet"},
+  {ru:"сообщение",tr:"sa-ap-SHCHE-nee-ye",en:"message",cat:"internet"},
+  {ru:"фото",tr:"FO-ta",en:"photo",cat:"internet"},
+  {ru:"видео",tr:"VEE-de-o",en:"video",cat:"internet"},
+  {ru:"экран",tr:"ek-RAN",en:"screen",cat:"internet"},
+  {ru:"подписчик",tr:"pat-PEES-chik",en:"follower / subscriber",cat:"internet"},
+  {ru:"пароль",tr:"pa-ROL’",en:"password",cat:"internet"},
+  {ru:"вай-фай",tr:"vai-fai",en:"wifi",cat:"internet"},
+  {ru:"приложение",tr:"pri-la-ZHE-nee-ye",en:"app",cat:"internet"},
+  {ru:"чат",tr:"chat",en:"chat",cat:"internet"},
+  // travel
+  {ru:"билет",tr:"bee-LYET",en:"ticket",cat:"travel"},
+  {ru:"паспорт",tr:"PAS-part",en:"passport",cat:"travel"},
+  {ru:"самолёт",tr:"sa-ma-LYOT",en:"airplane",cat:"travel"},
+  {ru:"поезд",tr:"PO-yest",en:"train",cat:"travel"},
+  {ru:"автобус",tr:"af-TO-boos",en:"bus",cat:"travel"},
+  {ru:"метро",tr:"myet-RO",en:"metro / subway",cat:"travel"},
+  {ru:"отель",tr:"a-TEL’",en:"hotel",cat:"travel"},
+  {ru:"багаж",tr:"ba-GASH",en:"luggage",cat:"travel"},
+  {ru:"карта",tr:"KAR-ta",en:"map",cat:"travel"},
+  {ru:"аэропорт",tr:"a-e-ra-PORT",en:"airport",cat:"travel"},
+  // school
+  {ru:"университет",tr:"oo-ni-vyer-see-TYET",en:"university",cat:"school"},
+  {ru:"урок",tr:"oo-ROK",en:"lesson",cat:"school"},
+  {ru:"учитель",tr:"oo-CHEE-tyel’",en:"teacher",cat:"school"},
+  {ru:"студент",tr:"stoo-DYENT",en:"student",cat:"school"},
+  {ru:"экзамен",tr:"ek-ZA-myen",en:"exam",cat:"school"},
+  {ru:"домашнее задание",tr:"da-MASH-nye-ye za-DA-nee-ye",en:"homework",cat:"school"},
+  {ru:"офис",tr:"O-fees",en:"office",cat:"school"},
+  {ru:"начальник",tr:"na-CHAL’-nik",en:"boss",cat:"school"},
+  {ru:"коллега",tr:"ka-LYE-ga",en:"colleague",cat:"school"},
+  {ru:"зарплата",tr:"zar-PLA-ta",en:"salary",cat:"school"},
+  // slang
+  {ru:"круто",tr:"KROO-ta",en:"cool / awesome",cat:"slang"},
+  {ru:"клёво",tr:"KLYO-va",en:"cool / great (slang)",cat:"slang"},
+  {ru:"блин",tr:"bleen",en:"darn / geez (mild, polite swap for a rude word)",cat:"slang"},
+  {ru:"короче",tr:"ka-RO-che",en:"anyway / long story short",cat:"slang"},
+  {ru:"давай",tr:"da-VAY",en:"let’s / come on / sure",cat:"slang"},
+  {ru:"ладно",tr:"LAD-na",en:"okay / alright",cat:"slang"},
+  {ru:"чё",tr:"cho",en:"what (very casual form of “что”)",cat:"slang"},
+  {ru:"прикольно",tr:"pri-KOL’-na",en:"funny / neat (slang)",cat:"slang"},
+  {ru:"не парься",tr:"nye PAR’-sya",en:"don’t worry about it (slang)",cat:"slang"}
+];
+VOCAB.forEach((v,i)=>{ v.id="V_"+i; v.idx=i; });
+function vocabByCat(cat){ return VOCAB.filter(v=>v.cat===cat); }
+
+// A short, curated set of very simple words for the very first reading drills
+// (Level 2), before we lean on the full vocabulary list.
+const READING_WORDS = [
+  {ru:"да",tr:"da",en:"yes"},{ru:"нет",tr:"nyet",en:"no"},
+  {ru:"дом",tr:"dom",en:"house"},{ru:"кот",tr:"kot",en:"cat"},
+  {ru:"сок",tr:"sok",en:"juice"},{ru:"чай",tr:"chay",en:"tea"},
+  {ru:"вот",tr:"vot",en:"here is"},{ru:"рот",tr:"rot",en:"mouth"},
+  {ru:"нос",tr:"nos",en:"nose"},{ru:"сон",tr:"son",en:"sleep / dream"},
+  {ru:"мир",tr:"meer",en:"world / peace"},{ru:"сад",tr:"sat",en:"garden"},
+  {ru:"тут",tr:"toot",en:"here"},{ru:"там",tr:"tam",en:"there"},
+  {ru:"мама",tr:"MA-ma",en:"mom"},{ru:"папа",tr:"PA-pa",en:"dad"},
+  {ru:"окно",tr:"ak-NO",en:"window"},{ru:"вода",tr:"va-DA",en:"water"},
+  {ru:"книга",tr:"KNEE-ga",en:"book"},{ru:"улица",tr:"OO-li-tsa",en:"street"},
+  {ru:"машина",tr:"ma-SHY-na",en:"car"},{ru:"спасибо",tr:"spa-SEE-ba",en:"thank you"},
+  {ru:"работа",tr:"ra-BO-ta",en:"work"},{ru:"погода",tr:"pa-GO-da",en:"weather"}
+];
+READING_WORDS.forEach((w,i)=>{ w.id="R_"+i; });
+/* =========================================================================
+   DATA — SENTENCES
+   breakdown: [ [russianWord, meaning], ... ] word-by-word gloss
+   ========================================================================= */
+const SENTENCES = [
+  {ru:"Я дома.",tr:"ya DO-ma",en:"I am at home.",level:5,
+   breakdown:[["Я","I"],["дома","at home"]],
+   note:"Russian doesn’t need a word for “am” here — “Я дома” literally is “I home”. The present tense of “to be” is simply left out."},
+  {ru:"Я не дома.",tr:"ya nye DO-ma",en:"I am not at home.",level:5,
+   breakdown:[["Я","I"],["не","not"],["дома","at home"]],
+   note:"Just drop “не” (“not”) in right before the word you’re negating."},
+  {ru:"Ты дома?",tr:"ty DO-ma?",en:"Are you at home?",level:5,
+   breakdown:[["Ты","you"],["дома","at home"]],
+   note:"Same words as a statement — in speech, just raise your pitch at the end to make it a question. Written Russian adds a question mark, no word order change needed."},
+  {ru:"Он тут.",tr:"on toot",en:"He is here.",level:5,breakdown:[["Он","he"],["тут","here"]]},
+  {ru:"Она там.",tr:"a-NA tam",en:"She is there.",level:5,breakdown:[["Она","she"],["там","there"]]},
+  {ru:"Мы здесь.",tr:"my zdyes’",en:"We are here.",level:5,breakdown:[["Мы","we"],["здесь","here"]]},
+  {ru:"Это дом.",tr:"EH-ta dom",en:"This is a house.",level:5,
+   breakdown:[["Это","this / it (is)"],["дом","a house"]],
+   note:"“Это” is a handy all-purpose “this is / it is” — it doesn’t change for gender or number."},
+  {ru:"Это моя семья.",tr:"EH-ta ma-YA seem-YA",en:"This is my family.",level:5,
+   breakdown:[["Это","this is"],["моя","my"],["семья","family"]]},
+  {ru:"Я студент.",tr:"ya stoo-DYENT",en:"I am a student. (said by a male)",level:5,
+   breakdown:[["Я","I"],["студент","student (m.)"]]},
+  {ru:"Я студентка.",tr:"ya stoo-DYENT-ka",en:"I am a student. (said by a female)",level:5,
+   breakdown:[["Я","I"],["студентка","student (f.)"]]},
+
+  {ru:"Я говорю по-русски.",tr:"ya ga-va-RYU pa-ROOS-ki",en:"I speak Russian.",level:6,
+   breakdown:[["Я","I"],["говорю","speak"],["по-русски","in Russian"]]},
+  {ru:"Ты понимаешь?",tr:"ty pa-nee-MA-yesh?",en:"Do you understand?",level:6,
+   breakdown:[["Ты","you"],["понимаешь","understand"]]},
+  {ru:"Я не понимаю.",tr:"ya nye pa-nee-MA-yu",en:"I don’t understand.",level:6,
+   breakdown:[["Я","I"],["не","not"],["понимаю","understand"]]},
+  {ru:"Он живёт в Москве.",tr:"on zhi-VYOT v mask-VYE",en:"He lives in Moscow.",level:6,
+   breakdown:[["Он","he"],["живёт","lives"],["в Москве","in Moscow"]]},
+  {ru:"Мы читаем книгу.",tr:"my chi-TA-yem KNEE-goo",en:"We are reading a book.",level:6,
+   breakdown:[["Мы","we"],["читаем","are reading"],["книгу","a book"]]},
+  {ru:"Она любит кофе.",tr:"a-NA LYU-bit KO-fye",en:"She loves coffee.",level:6,
+   breakdown:[["Она","she"],["любит","loves"],["кофе","coffee"]]},
+  {ru:"Я хочу есть.",tr:"ya kha-CHOO yest’",en:"I want to eat.",level:6,
+   breakdown:[["Я","I"],["хочу","want"],["есть","to eat"]]},
+  {ru:"Ты знаешь его?",tr:"ty ZNA-yesh ye-VO?",en:"Do you know him?",level:6,
+   breakdown:[["Ты","you"],["знаешь","know"],["его","him"]]},
+
+  {ru:"Что это?",tr:"shto EH-ta?",en:"What is this?",level:7,breakdown:[["Что","what"],["это","is this"]]},
+  {ru:"Кто ты?",tr:"kto ty?",en:"Who are you?",level:7,breakdown:[["Кто","who"],["ты","are you"]]},
+  {ru:"Где ты живёшь?",tr:"gdye ty zhi-VYOSH?",en:"Where do you live?",level:7,
+   breakdown:[["Где","where"],["ты","you"],["живёшь","live"]]},
+  {ru:"Когда ты придёшь?",tr:"kag-DA ty pri-DYOSH?",en:"When will you come?",level:7,
+   breakdown:[["Когда","when"],["ты","you"],["придёшь","will come"]]},
+  {ru:"Почему ты грустный?",tr:"pa-chi-MOO ty GROOST-niy?",en:"Why are you sad?",level:7,
+   breakdown:[["Почему","why"],["ты","you"],["грустный","(are) sad"]]},
+  {ru:"Как тебя зовут?",tr:"kak tee-BYA za-VOOT?",en:"What is your name?",level:7,
+   breakdown:[["Как","how"],["тебя","you"],["зовут","(they) call"]],
+   note:"Literally “How do they call you?” — Russian doesn’t ask “what is your name”, it asks how you’re called."},
+  {ru:"Сколько это стоит?",tr:"SKOL’-ka EH-ta STO-eet?",en:"How much does this cost?",level:7,
+   breakdown:[["Сколько","how much"],["это","this"],["стоит","costs"]]},
+
+  {ru:"Это мой дом.",tr:"EH-ta moy dom",en:"This is my house.",level:8,breakdown:[["Это","this is"],["мой","my (masc.)"],["дом","house"]]},
+  {ru:"Это моя книга.",tr:"EH-ta ma-YA KNEE-ga",en:"This is my book.",level:8,breakdown:[["Это","this is"],["моя","my (fem.)"],["книга","book"]]},
+  {ru:"Это моё окно.",tr:"EH-ta ma-YO ak-NO",en:"This is my window.",level:8,breakdown:[["Это","this is"],["моё","my (neuter)"],["окно","window"]]},
+  {ru:"Это наши друзья.",tr:"EH-ta NA-shi drooz-YA",en:"These are our friends.",level:8,breakdown:[["Это","these are"],["наши","our"],["друзья","friends"]]},
+
+  {ru:"Я был дома.",tr:"ya byl DO-ma",en:"I was at home. (said by a male)",level:9,breakdown:[["Я","I"],["был","was (masc.)"],["дома","at home"]]},
+  {ru:"Я была дома.",tr:"ya by-LA DO-ma",en:"I was at home. (said by a female)",level:9,breakdown:[["Я","I"],["была","was (fem.)"],["дома","at home"]]},
+  {ru:"Я буду работать завтра.",tr:"ya BOO-doo ra-BO-tat’ ZAF-tra",en:"I will work tomorrow.",level:9,
+   breakdown:[["Я","I"],["буду","will"],["работать","work"],["завтра","tomorrow"]]},
+  {ru:"Мы пойдём в кино.",tr:"my pay-DYOM v ki-NO",en:"We will go to the movies.",level:9,
+   breakdown:[["Мы","we"],["пойдём","will go"],["в кино","to the movies"]]},
+  {ru:"Вчера я читал книгу.",tr:"fchi-RA ya chi-TAL KNEE-goo",en:"Yesterday I read a book. (said by a male)",level:9,
+   breakdown:[["Вчера","yesterday"],["я","I"],["читал","read (masc.)"],["книгу","a book"]]},
+
+  {ru:"Я живу в России.",tr:"ya zhi-VOO v ra-SEE-ee",en:"I live in Russia.",level:10,
+   breakdown:[["Я","I"],["живу","live"],["в России","in Russia"]],
+   note:"“в России” — the ending -и shows the prepositional case, used for “location in/at”."},
+  {ru:"Я иду в школу.",tr:"ya ee-DOO v SHKO-loo",en:"I am going to school.",level:10,
+   breakdown:[["Я","I"],["иду","am going"],["в школу","to school"]],
+   note:"“в школу” — the ending -у shows the accusative case, used here for “motion toward”."},
+  {ru:"У меня нет времени.",tr:"oo mee-NYA nyet VRYE-mee-nee",en:"I don’t have time.",level:10,
+   breakdown:[["У меня","by me (I have)"],["нет","there isn’t"],["времени","of time"]],
+   note:"Russian doesn’t say “I don’t have” — it says “by me there isn’t”, and the thing you don’t have goes in the genitive case."},
+  {ru:"Это книга друга.",tr:"EH-ta KNEE-ga DROO-ga",en:"This is my friend’s book.",level:10,
+   breakdown:[["Это","this is"],["книга","the book"],["друга","of a friend"]],
+   note:"No apostrophe-s in Russian — “friend’s” is shown by changing “друг” to “друга” (genitive case)."},
+  {ru:"Я говорю с другом.",tr:"ya ga-va-RYU s DROO-gam",en:"I am talking with a friend.",level:10,
+   breakdown:[["Я","I"],["говорю","am talking"],["с другом","with a friend"]]},
+  {ru:"Я дал ему подарок.",tr:"ya dal ye-MOO pa-DA-rak",en:"I gave him a present.",level:10,
+   breakdown:[["Я","I"],["дал","gave"],["ему","to him"],["подарок","a present"]]},
+
+  {ru:"Мне нравится музыка.",tr:"mnye NRA-vit-sa MOO-zy-ka",en:"I like music.",level:11,
+   breakdown:[["Мне","to me"],["нравится","is pleasing"],["музыка","music"]],
+   note:"Literally: “To me, music is pleasing.” Russian flips the sentence around — the thing you like is the subject, and “I” becomes “to me”."},
+  {ru:"Мне всё равно.",tr:"mnye fsyo rav-NO",en:"I don’t care either way.",level:11,breakdown:[["Мне","to me"],["всё равно","(it’s) all the same"]]},
+  {ru:"Так себе.",tr:"tak see-BYE",en:"So-so.",level:11,breakdown:[["Так","so"],["себе","to itself"]]},
+  {ru:"Не за что.",tr:"NYE za shta",en:"You’re welcome / don’t mention it.",level:11,breakdown:[["Не за что","(there’s) nothing to (thank me) for"]]},
+  {ru:"Дай мне знать.",tr:"day mnye znat’",en:"Let me know.",level:11,breakdown:[["Дай","give"],["мне","to me"],["знать","to know"]]},
+  {ru:"Я скучаю по тебе.",tr:"ya skoo-CHA-yu pa tee-BYE",en:"I miss you.",level:11,breakdown:[["Я","I"],["скучаю","am missing"],["по тебе","after you"]]},
+  {ru:"Всё будет хорошо.",tr:"fsyo BOO-dyet kha-ra-SHO",en:"Everything will be fine.",level:11,breakdown:[["Всё","everything"],["будет","will be"],["хорошо","fine / well"]]},
+  {ru:"Что ты делаешь?",tr:"shto ty DYE-la-yesh?",en:"What are you doing?",level:11,breakdown:[["Что","what"],["ты","you"],["делаешь","are doing"]]},
+  {ru:"Приятно познакомиться.",tr:"pri-YAT-na paz-na-KO-mi-tsa",en:"Nice to meet you.",level:11,breakdown:[["Приятно","(it’s) pleasant"],["познакомиться","to get acquainted"]]}
+];
+SENTENCES.forEach((s,i)=>{ s.id="S_"+i; s.idx=i; });
+function sentencesByLevel(lvl){ return SENTENCES.filter(s=>s.level===lvl); }
+function sentencesUpTo(lvl){ return SENTENCES.filter(s=>s.level<=lvl); }
+/* =========================================================================
+   DATA — GRAMMAR
+   Each topic: explain[] (paragraphs), examples[] {ru,tr,en,note?}, compare? {literal,natural},
+   questions[] hand-written {type:'mc', prompt, options, correct(index), explain}
+   ========================================================================= */
+const GRAMMAR = [
+  { id:"gender", level:8, title:"Gender of Nouns",
+    explain:[
+      "Every Russian noun is one of three genders: masculine, feminine, or neuter. English doesn’t really do this (except for “he/she/it”), but in Russian it affects almost everything attached to the noun — adjectives, pronouns, and past-tense verbs.",
+      "The good news: you can usually tell the gender from the last letter of the word. Ends in a consonant or “й” → masculine. Ends in “-а” or “-я” → feminine. Ends in “-о” or “-е” → neuter."
+    ],
+    examples:[
+      {ru:"дом",tr:"dom",en:"house — masculine (ends in a consonant)"},
+      {ru:"книга",tr:"KNEE-ga",en:"book — feminine (ends in -а)"},
+      {ru:"окно",tr:"ak-NO",en:"window — neuter (ends in -о)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"Which gender is “машина” (car)?",options:["Masculine","Feminine","Neuter"],correct:1,explain:"“Машина” ends in “-а”, so it’s feminine — like most “-а” words."},
+      {type:"mc",prompt:"Which gender is “стол” (table)?",options:["Masculine","Feminine","Neuter"],correct:0,explain:"“Стол” ends in a consonant, so it’s masculine."},
+      {type:"mc",prompt:"Which gender is “море” (sea)?",options:["Masculine","Feminine","Neuter"],correct:2,explain:"“Море” ends in “-е”, so it’s neuter."},
+      {type:"mc",prompt:"Which ending usually signals a feminine noun?",options:["a consonant","-о","-а","-й"],correct:2,explain:"“-а” (and “-я”) endings are the classic feminine signal."},
+      {type:"mc",prompt:"Which gender is “друг” (friend)?",options:["Masculine","Feminine","Neuter"],correct:0,explain:"Ends in a consonant → masculine."}
+    ]},
+  { id:"plural", level:8, title:"Singular & Plural",
+    explain:[
+      "To make most nouns plural, you swap the ending: masculine/feminine words usually take “-ы” or “-и”, and most neuter words take “-а”.",
+      "A handful of common words are irregular and just have to be memorized — the same way “child → children” is irregular in English."
+    ],
+    examples:[
+      {ru:"дом → дома",tr:"dom → da-MA",en:"house → houses (irregular stress shift, common pattern)"},
+      {ru:"книга → книги",tr:"KNEE-ga → KNEE-gi",en:"book → books"},
+      {ru:"друг → друзья",tr:"drook → drooz-YA",en:"friend → friends (irregular)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"What’s the plural of “книга” (book)?",options:["книгы","книги","книгу"],correct:1,explain:"Feminine “-а” nouns usually switch to “-и” after г/к/х: книга → книги."},
+      {type:"mc",prompt:"“Друзья” is the plural of which word?",options:["друг (friend)","дом (house)","день (day)"],correct:0,explain:"“Друг → друзья” is one of the classic irregular plurals — worth memorizing early since “friends” comes up constantly."},
+      {type:"mc",prompt:"Most neuter nouns become plural by ending in…",options:["-а","-ы","-ь"],correct:0,explain:"Neuter “-о” nouns typically become “-а” in the plural, e.g. окно → окна."}
+    ]},
+  { id:"pronouns", level:8, title:"Personal Pronouns",
+    explain:[
+      "Russian pronouns work a lot like English ones, with one big difference: “you”. English uses one word for everyone, but Russian splits it in two. “Ты” is informal — friends, family, kids, people your own age. “Вы” is formal — strangers, elders, officials — and it’s also the normal plural “you” for a group, formal or not.",
+      "When in doubt with someone new, use “вы”. It’s safer to sound slightly too polite than too casual."
+    ],
+    examples:[
+      {ru:"Ты",tr:"ty",en:"you — one friend"},
+      {ru:"Вы",tr:"vy",en:"you — a stranger/elder, OR any group of people"}
+    ],
+    questions:[
+      {type:"mc",prompt:"You’re talking to your boss for the first time. Which “you” should you use?",options:["ты","вы"],correct:1,explain:"Use “вы” with people you don’t know well or who outrank you socially — it shows respect."},
+      {type:"mc",prompt:"You’re texting your little brother. Which “you” fits?",options:["ты","вы"],correct:0,explain:"“Ты” is for close, informal relationships — family and friends."},
+      {type:"mc",prompt:"“Она” means…",options:["he","she","it"],correct:1,explain:"“Он”=he, “она”=she, “оно”=it."},
+      {type:"mc",prompt:"Which pronoun means “they”?",options:["мы","они","вы"],correct:1,explain:"“Они” = they. “Мы” = we."}
+    ]},
+  { id:"possessives", level:8, title:"Possessive Pronouns",
+    explain:[
+      "Words like “my” also change to match the gender of the thing being owned — not the owner! “Мой” (my) becomes мой/моя/моё/мои depending on whether the noun is masculine, feminine, neuter, or plural.",
+      "A few possessives never change at all: его (his), её (her), их (their) are always the same, no matter what they’re attached to."
+    ],
+    examples:[
+      {ru:"мой дом / моя книга / моё окно",tr:"moy dom / ma-YA KNEE-ga / ma-YO ak-NO",en:"my house / my book / my window"},
+      {ru:"его дом, его книга, его окно",tr:"ye-VO dom...",en:"his house, his book, his window — “его” never changes"}
+    ],
+    questions:[
+      {type:"mc",prompt:"How do you say “my book” (книга is feminine)?",options:["мой книга","моя книга","моё книга"],correct:1,explain:"Feminine nouns pair with “моя”."},
+      {type:"mc",prompt:"How do you say “my window” (окно is neuter)?",options:["моё окно","моя окно","мой окно"],correct:0,explain:"Neuter nouns pair with “моё”."},
+      {type:"mc",prompt:"Which possessive NEVER changes its ending?",options:["мой (my)","твой (your)","его (his)"],correct:2,explain:"его, её and их are frozen forms — they don’t agree with the noun."}
+    ]},
+  { id:"present", level:6, title:"Present Tense Verbs",
+    explain:[
+      "Here’s a shortcut that saves you a lot of work: Russian has no present-tense version of “to be”. Where English says “I am a student”, Russian just says “Я студент” — literally “I student”. Don’t look for a missing word; there isn’t one.",
+      "Other verbs do conjugate, but the pattern is very regular. Most verbs follow one of two patterns based on their ending: “-ать/-ять” verbs (1st conjugation) or “-ить” verbs (2nd conjugation)."
+    ],
+    examples:[
+      {ru:"я делаю, ты делаешь, он делает, мы делаем, вы делаете, они делают",tr:"ya DYE-la-yu...",en:"I do, you do, he does, we do, you(pl) do, they do — “делать” (1st conj.)"},
+      {ru:"я говорю, ты говоришь, он говорит, мы говорим, вы говорите, они говорят",tr:"ya ga-va-RYU...",en:"I speak, you speak, he speaks... — “говорить” (2nd conj.)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"How do you say “I am a teacher” in Russian?",options:["Я есть учитель","Я учитель","Я быть учитель"],correct:1,explain:"No “to be” in the present tense — just “Я учитель”."},
+      {type:"mc",prompt:"“Ты говоришь” means…",options:["I speak","you speak","he speaks"],correct:1,explain:"“-ешь/-ишь” endings mark the “ты” (you) form."},
+      {type:"mc",prompt:"Which ending goes with “мы” (we)?",options:["-ешь","-ем / -им","-ют"],correct:1,explain:"“Мы” pairs with “-ем” (1st conj.) or “-им” (2nd conj.)."},
+      {type:"mc",prompt:"Fill in: Она ___ по-русски. (speaks)",options:["говорю","говоришь","говорит"],correct:2,explain:"“Она” (she) takes the “-ит” ending: говорит."}
+    ]},
+  { id:"past", level:9, title:"Past Tense",
+    explain:[
+      "The past tense is actually easier than the present in one way: it doesn’t care who’s speaking (I/you/he...), only about gender and number. Just drop the “-ть” off the infinitive and add -л (masculine), -ла (feminine), -ло (neuter), or -ли (plural).",
+      "So “я читал” (I read) if a man is speaking, but “я читала” if a woman is speaking — same word “я”, different verb ending."
+    ],
+    examples:[
+      {ru:"читать → читал / читала / читало / читали",tr:"chi-TAT’ → chi-TAL / chi-TA-la...",en:"to read → read (m/f/n/pl)"},
+      {ru:"Она была там.",tr:"a-NA by-LA tam",en:"She was there."}
+    ],
+    questions:[
+      {type:"mc",prompt:"A man says “I worked”. Which form is correct?",options:["Я работал","Я работала","Я работали"],correct:0,explain:"Masculine subject → “-л” ending: работал."},
+      {type:"mc",prompt:"A woman says “I was at home”. Which is correct?",options:["Я был дома","Я была дома","Я было дома"],correct:1,explain:"Feminine subject → “-ла” ending: была."},
+      {type:"mc",prompt:"“Они читали книгу” means…",options:["He read a book","They read a book","We read a book"],correct:1,explain:"“-ли” marks a plural subject: они (they)."},
+      {type:"mc",prompt:"Past tense endings agree with the subject’s…",options:["person only (I/you/he)","gender and number","the verb’s conjugation group"],correct:1,explain:"Unlike the present tense, Russian past tense doesn’t change by person — only gender/number."}
+    ]},
+  { id:"future", level:9, title:"Future Tense",
+    explain:[
+      "There are two ways to talk about the future, and the difference matters. For an ongoing or repeated action, use “буду/будешь/будет...” (a conjugated form of “to be”) plus the infinitive — like English “I will be working”.",
+      "For a single, completed action, Russian instead conjugates a special “perfective” version of the verb directly, with no extra word needed. You’ll meet perfective verbs properly in the aspect lesson later — for now, just recognize the “буду + infinitive” pattern as your default future tense."
+    ],
+    examples:[
+      {ru:"Я буду работать.",tr:"ya BOO-doo ra-BO-tat’",en:"I will work / I will be working."},
+      {ru:"Мы будем читать.",tr:"my BOO-dyem chi-TAT’",en:"We will read / be reading."}
+    ],
+    questions:[
+      {type:"mc",prompt:"How do you say “I will read” using the buду pattern?",options:["Я буду читать","Я буду читал","Я читать буду был"],correct:0,explain:"буду + infinitive (читать) is the pattern."},
+      {type:"mc",prompt:"Which word signals the future tense here: “Ты будешь работать”?",options:["Ты","будешь","работать"],correct:1,explain:"“Будешь” is the “you” form of “to be” used to build the future."},
+      {type:"mc",prompt:"“Мы будем смотреть фильм” means…",options:["We watched a movie","We are watching a movie","We will watch a movie"],correct:2,explain:"“Будем + infinitive” = future tense: “we will watch”."}
+    ]},
+  { id:"adjectives", level:8, title:"Adjectives & Agreement",
+    explain:[
+      "Adjectives in Russian have to “agree” with the noun they describe — matching its gender and number, the same way possessives do. Most adjectives follow a very predictable ending pattern: -ый/-ий (masculine), -ая (feminine), -ое (neuter), -ые (plural)."
+    ],
+    examples:[
+      {ru:"хороший дом / хорошая книга / хорошее окно / хорошие друзья",tr:"kha-RO-shiy dom / kha-RO-sha-ya KNEE-ga...",en:"good house / good book / good window / good friends"}
+    ],
+    questions:[
+      {type:"mc",prompt:"“книга” is feminine. Which fits: ___ книга (new book)?",options:["новый","новая","новое"],correct:1,explain:"Feminine nouns take the “-ая” adjective ending: новая."},
+      {type:"mc",prompt:"“окно” is neuter. Which fits: ___ окно (big window)?",options:["большой","большая","большое"],correct:2,explain:"Neuter nouns take “-ое”: большое."},
+      {type:"mc",prompt:"“друзья” is plural. Which fits: ___ друзья (interesting friends)?",options:["интересный","интересные","интересная"],correct:1,explain:"Plural nouns take “-ые”: интересные."}
+    ]},
+  { id:"cases-intro", level:10, title:"Introduction to Cases",
+    explain:[
+      "This is the concept that scares most beginners — but it’s more logical than it looks. English shows a word’s job in a sentence mostly through word order and little helper words (to, of, with...). Russian instead changes the ending of the noun itself. Those different endings are called “cases”.",
+      "There are six cases. You don’t need to master all of them today — just recognize the idea, and start noticing the two most useful ones for beginners: prepositional (location) and genitive (possession/negation), covered in the next two lessons."
+    ],
+    examples:[
+      {ru:"Nominative — who/what (the subject)",tr:"",en:"кот (a cat) — “Кот спит.” (The cat sleeps.)"},
+      {ru:"Genitive — of / whose / none",tr:"",en:"кота — “У меня нет кота.” (I don’t have a cat.)"},
+      {ru:"Dative — to / for",tr:"",en:"коту — “Я дал коту рыбу.” (I gave the cat fish.)"},
+      {ru:"Accusative — direct object",tr:"",en:"кота — “Я вижу кота.” (I see the cat.)"},
+      {ru:"Instrumental — by / with",tr:"",en:"котом — “Я играю с котом.” (I play with the cat.)"},
+      {ru:"Prepositional — about / in / on (location)",tr:"",en:"коте — “Я думаю о коте.” (I think about the cat.)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"What does a Russian case ending mostly replace from English?",options:["Verb tenses","Word order & helper words like “to/of/with”","Adjectives"],correct:1,explain:"Cases pack information that English carries in word order and prepositions into the noun’s ending itself."},
+      {type:"mc",prompt:"Which case is used for the subject of a sentence?",options:["Nominative","Genitive","Dative"],correct:0,explain:"Nominative is the “dictionary form” and the subject case — the one you look words up in."},
+      {type:"mc",prompt:"Which case is most useful for saying where something is located?",options:["Instrumental","Prepositional","Accusative"],correct:1,explain:"Prepositional case (after в/на) is your go-to for “in/at/on” a place."}
+    ]},
+  { id:"prepositional", level:10, title:"The Prepositional Case",
+    explain:[
+      "This is the single most useful case for a beginner, because it’s how you say where something is. After the prepositions “в” (in) and “на” (on/at), the noun takes a special ending — most often “-е”.",
+      "It’s also used with “о” (about) when talking about a topic."
+    ],
+    examples:[
+      {ru:"Москва → в Москве",tr:"mask-VA → v mask-VYE",en:"Moscow → in Moscow"},
+      {ru:"работа → на работе",tr:"ra-BO-ta → na ra-BO-tye",en:"work → at work"},
+      {ru:"Я думаю о тебе.",tr:"ya DOO-ma-yu a tee-BYE",en:"I’m thinking about you."}
+    ],
+    questions:[
+      {type:"mc",prompt:"“I live in Moscow” — which is correct?",options:["Я живу в Москва","Я живу в Москве","Я живу в Москву"],correct:1,explain:"“В” + location uses the prepositional case: Москва → Москве."},
+      {type:"mc",prompt:"Which preposition pairs with the prepositional case for “at work”?",options:["на",  "с", "у"],correct:0,explain:"“На работе” — “на” + prepositional case for many activities/locations."},
+      {type:"mc",prompt:"“О чём ты думаешь?” means…",options:["Where are you thinking?","What are you thinking about?","Who are you thinking of?"],correct:1,explain:"“О” (about) + prepositional case is used for topics of thought/conversation."}
+    ]},
+  { id:"genitive", level:10, title:"The Genitive Case",
+    explain:[
+      "The genitive case has three big jobs: showing possession (“of”, like an apostrophe-s), negation with “нет” (there isn’t/there aren’t), and quantities/numbers.",
+      "Russian doesn’t have an apostrophe-s — instead of “Anna’s book”, it says the equivalent of “the book of Anna”, with Anna’s ending changed to genitive."
+    ],
+    examples:[
+      {ru:"книга Анны",tr:"KNEE-ga AN-ny",en:"Anna’s book (literally “book of Anna”)"},
+      {ru:"У меня нет времени.",tr:"oo mee-NYA nyet VRYE-mee-nee",en:"I don’t have time."}
+    ],
+    questions:[
+      {type:"mc",prompt:"Which Russian construction replaces English’s apostrophe-s (“Anna’s book”)?",options:["An extra word for “belongs”","Changing the owner’s ending to genitive","Word order alone"],correct:1,explain:"Russian shows possession by putting the owner in the genitive case, not with ’s."},
+      {type:"mc",prompt:"“У меня нет...” is followed by which case?",options:["Nominative","Genitive","Dative"],correct:1,explain:"Negating existence with “нет” always takes the genitive case."},
+      {type:"mc",prompt:"“У меня нет времени” means…",options:["I have time","I don’t have time","I need time"],correct:1,explain:"“Нет” + genitive = “there is no...” — “I don’t have time.”"}
+    ]},
+  { id:"aspect", level:13, title:"Verb Aspect (Perfective vs. Imperfective)",
+    explain:[
+      "Nearly every Russian verb comes in a pair. The imperfective describes an ongoing, repeated, or general action (“I was reading”, “I read every day”). The perfective describes a single, completed action, usually with a clear result (“I finished reading it”).",
+      "Often the perfective is just the imperfective with a prefix added: делать (to do, imperfective) → сделать (to do/finish, perfective). It looks like a small change, but it shifts the whole meaning from “in progress” to “done”."
+    ],
+    examples:[
+      {ru:"Я делал домашнее задание.",tr:"ya DYE-lal...",en:"I was doing homework. (imperfective — in progress, maybe unfinished)"},
+      {ru:"Я сделал домашнее задание.",tr:"ya SDYE-lal...",en:"I did/finished homework. (perfective — completed)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"Which describes a completed, one-time action?",options:["Imperfective","Perfective"],correct:1,explain:"Perfective verbs highlight the result — the action being finished."},
+      {type:"mc",prompt:"“Я читал книгу” (imperfective) best translates as…",options:["I read the whole book (finished it)","I was reading a book (maybe unfinished)","I will read a book"],correct:1,explain:"Imperfective past often implies the action was ongoing, without confirming it finished."},
+      {type:"mc",prompt:"делать → сделать is an example of…",options:["Present vs past","Imperfective vs perfective pair","Formal vs informal"],correct:1,explain:"Adding a prefix like с- is a very common way Russian builds a perfective partner verb."}
+    ]},
+  { id:"motion", level:13, title:"Motion Verbs",
+    explain:[
+      "Russian splits “to go” into more specific verbs than English does. For going on foot, “идти” means going in one direction, right now (like “I am walking to the store”), while “ходить” means going habitually or there-and-back (like “I walk to school every day”).",
+      "The same pattern applies to vehicles: “ехать” (going by vehicle, one direction, now) vs. “ездить” (habitual/round trip by vehicle)."
+    ],
+    examples:[
+      {ru:"Я иду в магазин.",tr:"ya ee-DOO v ma-ga-ZEEN",en:"I am walking to the store (right now, one direction)."},
+      {ru:"Я хожу в школу каждый день.",tr:"ya kha-ZHOO v SHKO-loo KAZH-diy dyen’",en:"I walk to school every day (habitual)."}
+    ],
+    questions:[
+      {type:"mc",prompt:"Which verb fits: “Right now, I am walking to school” (one direction, in progress)?",options:["иду","хожу"],correct:0,explain:"“Иду” is for a single trip happening right now."},
+      {type:"mc",prompt:"Which verb fits: “I walk to school every day” (habitual)?",options:["иду","хожу"],correct:1,explain:"“Хожу” is for repeated/habitual walking trips."},
+      {type:"mc",prompt:"“Ехать” is used for motion…",options:["on foot","by vehicle","in the past only"],correct:1,explain:"“Ехать/ездить” are the vehicle versions of “идти/ходить”."}
+    ]},
+  { id:"reflexive", level:13, title:"Reflexive Verbs (-ся)",
+    explain:[
+      "Adding “-ся” (or “-сь” after a vowel) to the end of a verb often makes the action reflexive — done to oneself, or without a clear separate object. Some “-ся” verbs don’t translate literally as “self” at all; you just have to learn them as their own words.",
+      "You’ve already seen one: “нравиться” (to be pleasing/to like) always has “-ся” attached."
+    ],
+    examples:[
+      {ru:"учить → учиться",tr:"oo-CHEET’ → oo-CHEET-sa",en:"to teach → to study/learn (teach oneself)"},
+      {ru:"Я учусь в университете.",tr:"ya oo-CHOOS’ v oo-ni-vyer-see-TYE-tye",en:"I study at university."}
+    ],
+    questions:[
+      {type:"mc",prompt:"What does adding “-ся” to a verb typically signal?",options:["Past tense","A reflexive or self-directed meaning","A question"],correct:1,explain:"“-ся/-сь” marks reflexive, reciprocal, or otherwise “self-contained” verbs."},
+      {type:"mc",prompt:"Which verb already has “-ся” built in from earlier lessons?",options:["говорить (to speak)","нравиться (to be pleasing)","читать (to read)"],correct:1,explain:"“Нравиться” always carries “-ся” — it’s just part of the word."}
+    ]},
+  { id:"word-order", level:11, title:"Word Order",
+    explain:[
+      "Because case endings already show each word’s job, Russian word order is much more flexible than English. The default is still Subject-Verb-Object, just like English, but flipping the order often just shifts emphasis rather than changing meaning.",
+      "Beginners should stick to the default SVO order — it’s always correct and always understood — and just get used to seeing the flexible order in things natives say."
+    ],
+    examples:[
+      {ru:"Я люблю музыку.",tr:"ya lyub-LYU MOO-zy-koo",en:"I love music. (neutral, default order)"},
+      {ru:"Музыку я люблю.",tr:"MOO-zy-koo ya lyub-LYU",en:"Music, I love. (emphasizes “music” — still grammatically correct)"}
+    ],
+    questions:[
+      {type:"mc",prompt:"What is the safest default word order for a beginner?",options:["Object-Subject-Verb","Subject-Verb-Object","Verb-Subject-Object"],correct:1,explain:"SVO is the neutral, always-correct default — same as English."},
+      {type:"mc",prompt:"Why can Russian word order shift more freely than English?",options:["Because verbs are irregular","Because case endings already show each word’s grammatical role","Because there’s no punctuation"],correct:1,explain:"With cases doing the work of showing “who did what to whom”, word order is freed up to express emphasis instead."}
+    ]}
+];
+GRAMMAR.forEach(g=>{ g.questions.forEach((q,i)=>{ q.id=g.id+"_q"+i; }); });
+function grammarById(id){ return GRAMMAR.find(g=>g.id===id); }
+/* =========================================================================
+   DATA — LISTENING
+   Tiers: 1=slow & clear, 2=normal, 3=natural/conversational, 4=fast.
+   rate = SpeechSynthesisUtterance rate to simulate the tier.
+   ========================================================================= */
+const LISTENING_TIERS = [
+  {tier:1, title:"Slow & Clear", rate:0.62, note:"Every sound fully pronounced, nothing rushed — like a teacher modeling a word."},
+  {tier:2, title:"Normal Speed", rate:0.92, note:"How someone would speak to you patiently in conversation."},
+  {tier:3, title:"Natural Speech", rate:1.08, note:"Regular conversational pace — sounds start blending together a little."},
+  {tier:4, title:"Fast / Native Pace", rate:1.35, note:"Full native speed. This is what real conversations actually sound like."}
+];
+const LISTENING_NOTES = [
+  {title:"“Что” is said “shto”, not “chto”",
+   body:"The letters spell ч-т-о, which looks like it should sound like “chto”. But in this one very common word, что is pronounced “shto”. You'll hear this constantly, since “что” means “what” and “that”."},
+  {title:"Unstressed “о” relaxes toward “a”",
+   body:"This pattern is called akanye. Only the STRESSED syllable of a word gets a full, clear “o” sound. Every other “о” in the word gets swallowed toward a quick “a” sound. That's why “хорошо” sounds like “kha-ra-SHO”, not “kho-ro-sho” — only the last, stressed о stays a full “o”."},
+  {title:"Final consonants devoice",
+   body:"A voiced consonant (б, в, г, д, ж, з) at the very end of a word often devoices — it turns into its voiceless partner. “Друг” (friend) is written with a г but said like “drook”, with a “k” sound, because г is at the end of the word."},
+  {title:"Words blend together",
+   body:"Just like English speakers say “gonna” instead of “going to”, Russian speakers run short words into the next word with no gap. “В общем” (basically) can sound like one word. Don't expect to hear neat little gaps between every word — train your ear to catch the whole phrase, not letter by letter."},
+  {title:"Listen for the shape, not every letter",
+   body:"Your goal isn't to mentally transcribe every sound and then translate it — that's too slow for real conversation. Instead, train yourself to recognize the whole shape of common words and phrases at once, the same way you instantly recognize “how are you” in English without sounding it out."}
+];
+
+/* =========================================================================
+   DATA — CONVERSATION SIMULATOR
+   Each dialogue is a list of bot lines. For each line, `replies` holds the
+   possible things the learner could say back — exactly one `correct:true`.
+   Wrong replies are believable (drawn from the same everyday-phrase pool),
+   not random nonsense.
+   ========================================================================= */
+const CONVERSATIONS = [
+  { id:"c1", title:"First Greeting", level:3, desc:"The most basic exchange there is — say hi and introduce yourself.",
+    turns:[
+      { bot:"Привет!", botTr:"pree-VYET", botEn:"Hi!",
+        replies:[
+          {ru:"Привет!",en:"Hi!",correct:true,explain:"A friendly “привет” back is the natural, informal response to “привет”."},
+          {ru:"Спасибо.",en:"Thank you.",correct:false,explain:"“Спасибо” means “thank you” — nobody said anything to thank them for yet."},
+          {ru:"До свидания.",en:"Goodbye.",correct:false,explain:"That would end the conversation before it started!"},
+          {ru:"Где?",en:"Where?",correct:false,explain:"There's no question to answer yet."}
+        ]},
+      { bot:"Как дела?", botTr:"kak dee-LA", botEn:"How's it going?",
+        replies:[
+          {ru:"Хорошо, а у тебя?",en:"Good, and you?",correct:true,explain:"This is the standard friendly reply — answer, then bounce the question back."},
+          {ru:"Меня зовут Анна.",en:"My name is Anna.",correct:false,explain:"That answers “what's your name”, not “how are you”."},
+          {ru:"Это дом.",en:"This is a house.",correct:false,explain:"Unrelated to the question."},
+          {ru:"Нет, спасибо.",en:"No, thank you.",correct:false,explain:"“Как дела” isn't an offer — there's nothing to decline here."}
+        ]},
+      { bot:"Как тебя зовут?", botTr:"kak tee-BYA za-VOOT", botEn:"What's your name?",
+        replies:[
+          {ru:"Меня зовут Алекс.",en:"My name is Alex.",correct:true,explain:"“Меня зовут ___” is how you give your name — literally “they call me ___”. Swap in your own name when you say this for real!"},
+          {ru:"Мне тридцать лет.",en:"I am thirty years old.",correct:false,explain:"That answers “how old are you”, not “what's your name”."},
+          {ru:"Я дома.",en:"I am at home.",correct:false,explain:"Unrelated to the question."},
+          {ru:"Хорошо, спасибо.",en:"Good, thanks.",correct:false,explain:"That answers “how are you”, not the name question."}
+        ]},
+      { bot:"Приятно познакомиться!", botTr:"pri-YAT-na paz-na-KO-mi-tsa", botEn:"Nice to meet you!",
+        replies:[
+          {ru:"Мне тоже приятно!",en:"Nice to meet you too!",correct:true,explain:"“Мне тоже” = “me too” — a natural way to return the sentiment."},
+          {ru:"Пока!",en:"Bye!",correct:false,explain:"A little abrupt right after just meeting someone."},
+          {ru:"Извините.",en:"Sorry / excuse me.",correct:false,explain:"There's nothing to apologize for here."},
+          {ru:"Что это?",en:"What is this?",correct:false,explain:"Doesn't respond to the compliment/greeting."}
+        ]}
+    ]},
+  { id:"c2", title:"Talking About Home", level:5, desc:"Practice with “дома” (at home) and simple yes/no answers.",
+    turns:[
+      { bot:"Ты дома?", botTr:"ty DO-ma", botEn:"Are you at home?",
+        replies:[
+          {ru:"Да, я дома.",en:"Yes, I'm at home.",correct:true,explain:"A direct, natural answer to a yes/no question."},
+          {ru:"Это мой дом.",en:"This is my house.",correct:false,explain:"Answers a different question — “whose house is this”."},
+          {ru:"Где ты?",en:"Where are you?",correct:false,explain:"That's asking a question back instead of answering."},
+          {ru:"Спасибо большое.",en:"Thank you very much.",correct:false,explain:"Doesn't answer yes or no."}
+        ]},
+      { bot:"Что ты делаешь?", botTr:"shto ty DYE-la-yesh", botEn:"What are you doing?",
+        replies:[
+          {ru:"Я читаю книгу.",en:"I'm reading a book.",correct:true,explain:"A normal, specific answer to “what are you doing”."},
+          {ru:"Я студент.",en:"I am a student.",correct:false,explain:"That answers “who are you”, not “what are you doing right now”."},
+          {ru:"Это интересно.",en:"That's interesting.",correct:false,explain:"A reaction, not an answer to the question."},
+          {ru:"Он живёт в Москве.",en:"He lives in Moscow.",correct:false,explain:"Unrelated — talks about someone else entirely."}
+        ]},
+      { bot:"Тебе нравится книга?", botTr:"tee-BYE NRA-vit-sa KNEE-ga", botEn:"Do you like the book?",
+        replies:[
+          {ru:"Да, мне очень нравится.",en:"Yes, I like it a lot.",correct:true,explain:"“Мне нравится” = “I like it” — the natural reply here."},
+          {ru:"Я не понимаю.",en:"I don't understand.",correct:false,explain:"That would mean you didn't understand the question, not answer it."},
+          {ru:"Сколько это стоит?",en:"How much does this cost?",correct:false,explain:"Off-topic — nobody mentioned buying anything."},
+          {ru:"У меня нет времени.",en:"I don't have time.",correct:false,explain:"Doesn't respond to whether you like the book."}
+        ]}
+    ]},
+  { id:"c3", title:"Where Do You Live?", level:7, desc:"A short exchange using question words you already know.",
+    turns:[
+      { bot:"Где ты живёшь?", botTr:"gdye ty zhi-VYOSH", botEn:"Where do you live?",
+        replies:[
+          {ru:"Я живу в Москве.",en:"I live in Moscow.",correct:true,explain:"A direct answer using “в + prepositional case” for location."},
+          {ru:"Мне нравится Москва.",en:"I like Moscow.",correct:false,explain:"That's an opinion about the city, not where you live."},
+          {ru:"Я иду домой.",en:"I'm going home.",correct:false,explain:"Talks about going somewhere, not where you live."},
+          {ru:"Это моя сестра.",en:"This is my sister.",correct:false,explain:"Introduces a person instead of answering the location question."}
+        ]},
+      { bot:"Тебе нравится там?", botTr:"tee-BYE NRA-vit-sa tam", botEn:"Do you like it there?",
+        replies:[
+          {ru:"Да, очень нравится.",en:"Yes, I like it a lot.",correct:true,explain:"Simple, natural yes-answer."},
+          {ru:"Это далеко.",en:"It's far away.",correct:false,explain:"Doesn't say whether you like it."},
+          {ru:"Я не знаю его.",en:"I don't know him.",correct:false,explain:"Unrelated — “him” wasn't part of the question."},
+          {ru:"У меня есть машина.",en:"I have a car.",correct:false,explain:"Unrelated statement."}
+        ]},
+      { bot:"Что ты любишь делать там?", botTr:"shto ty LYU-beesh DYE-lat’ tam", botEn:"What do you like to do there?",
+        replies:[
+          {ru:"Я люблю гулять и читать.",en:"I like to stroll and read.",correct:true,explain:"Answers “what do you like to do” with real activities."},
+          {ru:"Я живу там пять лет.",en:"I've lived there for five years.",correct:false,explain:"Answers “how long”, not “what do you like doing”."},
+          {ru:"Это очень большой город.",en:"It's a very big city.",correct:false,explain:"Describes the city instead of your activities."},
+          {ru:"Спокойной ночи.",en:"Good night.",correct:false,explain:"Ends the conversation instead of answering."}
+        ]}
+    ]},
+  { id:"c4", title:"At a Café", level:11, desc:"Order something to eat or drink — a practical travel scenario.",
+    turns:[
+      { bot:"Здравствуйте! Что вы хотите?", botTr:"ZDRAS-tvuy-tye, shto vy kha-TEE-tye", botEn:"Hello! What would you like?",
+        replies:[
+          {ru:"Кофе, пожалуйста.",en:"Coffee, please.",correct:true,explain:"A simple, polite order — item + “пожалуйста”."},
+          {ru:"Меня зовут Джон.",en:"My name is John.",correct:false,explain:"Nobody asked your name here."},
+          {ru:"До свидания.",en:"Goodbye.",correct:false,explain:"You just walked in — leaving now would be odd!"},
+          {ru:"Я не голоден.",en:"I'm not hungry.",correct:false,explain:"Possible, but doesn't answer “what would you like” — and you're at a café."}
+        ]},
+      { bot:"С молоком?", botTr:"s ma-la-KOM", botEn:"With milk?",
+        replies:[
+          {ru:"Да, с молоком, спасибо.",en:"Yes, with milk, please.",correct:true,explain:"Direct yes-answer plus a polite “thank you”."},
+          {ru:"Это вкусно.",en:"That's tasty.",correct:false,explain:"You haven't tried it yet — doesn't answer the question."},
+          {ru:"Сколько это стоит?",en:"How much does it cost?",correct:false,explain:"A reasonable question, but not an answer to “with milk?”."},
+          {ru:"Я тоже.",en:"Me too.",correct:false,explain:"Doesn't make sense as a reply to a yes/no question about your own order."}
+        ]},
+      { bot:"С вас триста рублей.", botTr:"s vas TREES-ta ROOB-lyey", botEn:"That'll be three hundred rubles.",
+        replies:[
+          {ru:"Вот, пожалуйста.",en:"Here you go.",correct:true,explain:"A natural phrase for handing over payment."},
+          {ru:"Приятно познакомиться.",en:"Nice to meet you.",correct:false,explain:"You're paying for coffee, not meeting someone for the first time."},
+          {ru:"Я не знаю.",en:"I don't know.",correct:false,explain:"Doesn't fit — you know how to pay!"},
+          {ru:"Это моя книга.",en:"This is my book.",correct:false,explain:"Completely unrelated to paying."}
+        ]}
+    ]},
+  { id:"c5", title:"Making Plans", level:12, desc:"A longer, more natural exchange about weekend plans.",
+    turns:[
+      { bot:"Что ты делаешь в субботу?", botTr:"shto ty DYE-la-yesh f soo-BO-too", botEn:"What are you doing on Saturday?",
+        replies:[
+          {ru:"Ещё не знаю. А ты?",en:"I don't know yet. What about you?",correct:true,explain:"A very natural, open-ended answer that keeps the conversation going."},
+          {ru:"Мне двадцать пять лет.",en:"I'm twenty-five years old.",correct:false,explain:"Doesn't answer what you're doing Saturday."},
+          {ru:"Это было вчера.",en:"That was yesterday.",correct:false,explain:"Saturday is in the future here, not the past."},
+          {ru:"Я не голоден.",en:"I'm not hungry.",correct:false,explain:"Unrelated to weekend plans."}
+        ]},
+      { bot:"Хочешь пойти в кино?", botTr:"KHO-chesh pai-TEE f ki-NO", botEn:"Do you want to go to the movies?",
+        replies:[
+          {ru:"Да, давай!",en:"Yes, let's do it!",correct:true,explain:"“Давай” is the classic casual “let's / sure, go for it”."},
+          {ru:"Это моя машина.",en:"That's my car.",correct:false,explain:"Unrelated statement."},
+          {ru:"Он не понимает.",en:"He doesn't understand.",correct:false,explain:"Talks about someone else, doesn't answer the invitation."},
+          {ru:"Спасибо за подарок.",en:"Thanks for the gift.",correct:false,explain:"No gift was mentioned — unrelated."}
+        ]},
+      { bot:"Во сколько?", botTr:"va SKOL’-ka", botEn:"At what time?",
+        replies:[
+          {ru:"В семь часов, хорошо?",en:"At seven o'clock, okay?",correct:true,explain:"Suggests a specific time — exactly what “во сколько” is asking for."},
+          {ru:"Потому что я устал.",en:"Because I'm tired.",correct:false,explain:"Answers “why”, not “what time”."},
+          {ru:"Это далеко отсюда.",en:"It's far from here.",correct:false,explain:"Talks about distance, not time."},
+          {ru:"Я тоже так думаю.",en:"I think so too.",correct:false,explain:"Doesn't give a time."}
+        ]}
+    ]}
+];
+CONVERSATIONS.forEach(c=>{ c.turns.forEach((t,i)=>{ t.id=c.id+"_t"+i; }); });
+/* =========================================================================
+   UTILITIES
+   ========================================================================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function sample(arr, n){ return shuffle(arr).slice(0, n); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function normalizeAnswer(s){
+  return String(s||"")
+    .trim().toLowerCase()
+    .replace(/ё/g,"е")
+    .replace(/[.,!?;:()"«»']/g,"")
+    .replace(/\s+/g," ");
+}
+function answerMatches(given, accepted){
+  const g = normalizeAnswer(given);
+  if(!g) return false;
+  const variants = String(accepted).split("/").map(s=>normalizeAnswer(s));
+  return variants.includes(g);
+}
+function todayKey(d){
+  d = d || new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function daysSince(ts){ return (Date.now()-ts)/86400000; }
+let toastTimer=null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"), 2200);
+}
+
+/* =========================================================================
+   STORE — localStorage persistence
+   ========================================================================= */
+const STORAGE_KEY = "cyrillicApp_v1";
+const Store = {
+  data: null,
+  defaults(){
+    return {
+      version:1,
+      xp:0,
+      streak:0,
+      lastActiveDay:null,
+      theme:null,               // null=auto, 'light', 'dark'
+      showTranslit:true,
+      currentLevel:1,
+      lessonProgress:{},        // lessonId -> {completed, bestScore, attempts}
+      srs:{},                   // itemId -> {kind, box, due, correct, incorrect, lastReviewed, firstSeen}
+      confusion:{},             // "A|B" -> count  (letter confusion pairs)
+      vocabMistakes:{},         // vocabId -> count
+      conversationProgress:{},  // convId -> {turn, done}
+      totalAnswered:0,
+      totalCorrect:0,
+      createdAt:Date.now()
+    };
+  },
+  load(){
+    let saved = null;
+    try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ saved = null; }
+    this.data = Object.assign(this.defaults(), saved||{});
+    // deep-merge nested objects so new fields survive upgrades
+    const d = this.defaults();
+    for(const k of ["lessonProgress","srs","confusion","vocabMistakes","conversationProgress"]){
+      this.data[k] = Object.assign({}, d[k], (saved && saved[k]) || {});
+    }
+    this._bumpStreak();
+    return this.data;
+  },
+  save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); }catch(e){ /* storage unavailable */ }
+  },
+  _bumpStreak(){
+    const today = todayKey();
+    const last = this.data.lastActiveDay;
+    if(last === today) return;
+    if(last){
+      const gap = Math.round((new Date(today) - new Date(last)) / 86400000);
+      if(gap === 1) this.data.streak += 1;
+      else if(gap > 1) this.data.streak = 1;
+    } else {
+      this.data.streak = 1;
+    }
+    this.data.lastActiveDay = today;
+    this.save();
+  },
+  addXp(n){
+    this.data.xp += n;
+    this.save();
+    if(typeof updateTopbar === "function") updateTopbar();
+  },
+  reset(){
+    localStorage.removeItem(STORAGE_KEY);
+    this.load();
+  }
+};
+
+/* =========================================================================
+   SPACED REPETITION (simplified Leitner system)
+   ========================================================================= */
+const LEITNER_DAYS = [0, 1, 2, 4, 7, 14, 30, 60];
+const SRS = {
+  ensure(id, kind){
+    if(!Store.data.srs[id]){
+      Store.data.srs[id] = {kind, box:0, due:Date.now(), correct:0, incorrect:0, lastReviewed:0, firstSeen:Date.now()};
+      Store.save();
+    }
+    return Store.data.srs[id];
+  },
+  get(id){ return Store.data.srs[id]; },
+  record(id, kind, correct){
+    const item = this.ensure(id, kind);
+    item.lastReviewed = Date.now();
+    if(correct){
+      item.correct += 1;
+      item.box = Math.min(item.box + 1, LEITNER_DAYS.length - 1);
+      item.due = Date.now() + LEITNER_DAYS[item.box] * 86400000;
+    } else {
+      item.incorrect += 1;
+      item.box = 0;
+      item.due = Date.now(); // due again immediately (and re-queued this session)
+    }
+    Store.save();
+    return item;
+  },
+  dueIds(kindFilter){
+    const now = Date.now();
+    return Object.keys(Store.data.srs).filter(id=>{
+      const it = Store.data.srs[id];
+      if(kindFilter && it.kind !== kindFilter) return false;
+      return it.due <= now;
+    });
+  },
+  allIntroducedIds(kindFilter){
+    return Object.keys(Store.data.srs).filter(id => !kindFilter || Store.data.srs[id].kind === kindFilter);
+  },
+  masteryLabel(item){
+    if(!item) return "new";
+    if(item.box <= 1) return "learning";
+    if(item.box <= 3) return "familiar";
+    return "mastered";
+  },
+  strugglingIds(kindFilter, minWrong){
+    minWrong = minWrong || 2;
+    return Object.keys(Store.data.srs).filter(id=>{
+      const it = Store.data.srs[id];
+      if(kindFilter && it.kind !== kindFilter) return false;
+      return it.incorrect >= minWrong && it.incorrect >= it.correct;
+    });
+  }
+};
+
+/* =========================================================================
+   CONFUSION TRACKING — recognizes patterns like В/Б, Ы/И, Е/Э, Я/Ю
+   ========================================================================= */
+const Confusion = {
+  key(a,b){ return [a,b].sort().join("|"); },
+  log(a,b){
+    if(a===b) return;
+    const k = this.key(a,b);
+    Store.data.confusion[k] = (Store.data.confusion[k]||0) + 1;
+    Store.save();
+  },
+  top(n){
+    return Object.entries(Store.data.confusion)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0, n||5)
+      .map(([k,v])=>({pair:k.split("|"), count:v}));
+  }
+};
+
+/* =========================================================================
+   SPEECH — Web Speech API wrapper (graceful no-op if unsupported)
+   ========================================================================= */
+const Speech = {
+  available: typeof window!=="undefined" && "speechSynthesis" in window,
+  voices: [],
+  ruVoice: null,
+  init(){
+    if(!this.available) return;
+    const load = ()=>{
+      this.voices = window.speechSynthesis.getVoices() || [];
+      this.ruVoice = this.voices.find(v=>/^ru/i.test(v.lang)) || null;
+    };
+    load();
+    if(typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+      window.speechSynthesis.onvoiceschanged = load;
+    }
+  },
+  speak(text, rate){
+    if(!this.available || !text) return false;
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "ru-RU";
+      u.rate = rate || 0.95;
+      if(this.ruVoice) u.voice = this.ruVoice;
+      window.speechSynthesis.speak(u);
+      return true;
+    }catch(e){ return false; }
+  }
+};
+function speakBtn(text, rate, extraClass){
+  if(!Speech.available) return "";
+  const safe = escapeHtml(text).replace(/"/g,"&quot;");
+  return `<button type="button" class="speak-btn ${extraClass||""}" onclick="event.stopPropagation();Speech.speak('${text.replace(/'/g,"\\'")}', ${rate||1})" title="Listen" aria-label="Listen">🔊</button>`;
+}
+/* =========================================================================
+   EXERCISE GENERATORS
+   Every generator returns a plain exercise object consumed by ExercisePlayer:
+   { type, kicker, promptRu, promptEn, sub, audio, options, accept,
+     correctDisplay, pairs, orderTokens, itemRef, explain }
+   ========================================================================= */
+const LETTER_SOUND_KEY = {
+  "А":"AH","О":"O","М":"M","Т":"T","К":"K",
+  "Н":"N","В":"V","Р":"R","С":"S","У":"OO",
+  "Э":"EH","Х":"KH","З":"Z","И":"EE","П":"P",
+  "Л":"L","Г":"G","Д":"D","Б":"B","Ж":"ZH",
+  "Е":"YE","Ё":"YO","Й":"Y","Ы":"UH","Ь":"(softens)",
+  "Ю":"YU","Я":"YA","Ц":"TS","Ч":"CH","Ш":"SH",
+  "Щ":"SHCH","Ъ":"(silent)","Ф":"F"
+};
+const CONFUSABLE_LETTERS = [["В","Б"],["Ы","И"],["Е","Э"],["Я","Ю"],["Ш","Щ"],["Н","П"],["Р","Ь"],["Г","П"],["З","Э"],["Ц","Ч"],["Ч","Щ"]];
+
+function pickDistractorLetters(letter, pool, count){
+  pool = pool.filter(l=>l.up!==letter.up);
+  const forced = [];
+  CONFUSABLE_LETTERS.forEach(pair=>{
+    if(pair.includes(letter.up)){
+      const other = pair[0]===letter.up ? pair[1] : pair[0];
+      const found = pool.find(l=>l.up===other);
+      if(found && !forced.includes(found)) forced.push(found);
+    }
+  });
+  const rest = sample(pool.filter(l=>!forced.includes(l)), Math.max(0,count-forced.length));
+  return sample(forced.concat(rest), Math.min(count, forced.length+rest.length));
+}
+
+function genLetterSoundMC(letter, pool){
+  const distractors = pickDistractorLetters(letter, pool, 3);
+  const options = shuffle([letter, ...distractors]).map(l=>({text:LETTER_SOUND_KEY[l.up]||l.nameTr, correct:l.up===letter.up, refId:l.up}));
+  return {
+    type:"mc", kicker:"Cyrillic → Sound",
+    promptRu: letter.up, sub:null,
+    options,
+    itemRef:{id:letter.id, kind:"letter"},
+    explain:`“${letter.up}” sounds like: ${letter.sound} Example: ${letter.ex} (${letter.exTr}) = “${letter.exEn}”.`,
+    correctDisplay: LETTER_SOUND_KEY[letter.up]||letter.nameTr
+  };
+}
+function genLetterFromSoundMC(letter, pool){
+  const distractors = pickDistractorLetters(letter, pool, 3);
+  const options = shuffle([letter, ...distractors]).map(l=>({text:l.up, correct:l.up===letter.up, refId:l.up}));
+  return {
+    type:"mc", kicker:"Sound → Cyrillic",
+    promptEn: LETTER_SOUND_KEY[letter.up]||letter.nameTr, sub:"Which letter makes this sound?",
+    options,
+    itemRef:{id:letter.id, kind:"letter"},
+    explain:`“${letter.up}” sounds like: ${letter.sound}`,
+    correctDisplay: letter.up
+  };
+}
+function genWordReadingMC(word, pool){
+  const others = sample(pool.filter(w=>w.ru!==word.ru), 3).map(w=>w.tr);
+  const options = shuffle([word.tr, ...others]).map(t=>({text:t, correct:t===word.tr}));
+  return {
+    type:"mc", kicker:"Reading Practice",
+    promptRu: word.ru, sub:"How is this pronounced?",
+    options,
+    itemRef:null,
+    explain: word.en ? `“${word.ru}” (${word.tr}) means “${word.en}”.` : `“${word.ru}” is pronounced “${word.tr}”.`,
+    correctDisplay: word.tr
+  };
+}
+function genWordReadingType(word){
+  return {
+    type:"type", kicker:"Reading Practice — Type What You Read",
+    promptRu: word.ru, sub:"Type the pronunciation (English letters).",
+    accept: word.tr.replace(/[-’]/g,""),
+    itemRef:null,
+    explain: word.en ? `“${word.ru}” (${word.tr}) means “${word.en}”.` : `Pronounced “${word.tr}”.`,
+    correctDisplay: word.tr,
+    lenient:true
+  };
+}
+function genVocabMC(item, direction, pool){
+  pool = pool.filter(v=>v.id!==item.id);
+  if(direction==="ru2en"){
+    const correctEn = item.en.split("/")[0].trim();
+    const distractors = sample(pool, 3).map(v=>v.en.split("/")[0].trim());
+    const options = shuffle([correctEn, ...distractors]).map(t=>({text:t, correct:t===correctEn}));
+    return {
+      type:"mc", kicker:"Russian → English",
+      promptRu:item.ru, sub:null, options,
+      itemRef:{id:item.id, kind:"vocab"},
+      explain:`“${item.ru}” (${item.tr}) means “${item.en}”.`,
+      correctDisplay:item.en
+    };
+  } else {
+    const promptEn = item.en.split("/")[0].trim();
+    const distractors = sample(pool, 3).map(v=>v.ru);
+    const options = shuffle([item.ru, ...distractors]).map(t=>({text:t, correct:t===item.ru}));
+    return {
+      type:"mc", kicker:"English → Russian",
+      promptEn, sub:null, options,
+      itemRef:{id:item.id, kind:"vocab"},
+      explain:`“${promptEn}” = “${item.ru}” (${item.tr}).`,
+      correctDisplay:item.ru
+    };
+  }
+}
+function genVocabType(item, direction){
+  if(direction==="ru2en"){
+    return {
+      type:"type", kicker:"Type the English Meaning",
+      promptRu:item.ru, sub:null,
+      accept:item.en, itemRef:{id:item.id, kind:"vocab"},
+      explain:`“${item.ru}” (${item.tr}) means “${item.en}”.`,
+      correctDisplay:item.en
+    };
+  }
+  return {
+    type:"type", kicker:"Type the Russian Word",
+    promptEn:item.en.split("/")[0].trim(), sub:"Type it in Cyrillic.",
+    accept:item.ru, itemRef:{id:item.id, kind:"vocab"},
+    explain:`“${item.en.split("/")[0].trim()}” = “${item.ru}” (${item.tr}).`,
+    correctDisplay:item.ru
+  };
+}
+function genSentenceOrder(sentence){
+  const tokens = sentence.ru.replace(/[.?!]$/,"").split(" ");
+  return {
+    type:"order", kicker:"Word Order — Build the Sentence",
+    promptEn: sentence.en, sub:"Tap the words in the right order.",
+    orderTokens: tokens,
+    itemRef:{id:sentence.id, kind:"sentence"},
+    explain: (sentence.note ? sentence.note+" " : "") + `“${sentence.ru}” = “${sentence.en}”.`,
+    correctDisplay: sentence.ru
+  };
+}
+function genSentenceMatch(sentence){
+  return {
+    type:"match", kicker:"Match the Words",
+    promptRu:sentence.ru, sub:sentence.tr,
+    pairs: sentence.breakdown.map(b=>[b[0], b[1]]),
+    itemRef:{id:sentence.id, kind:"sentence"},
+    explain:(sentence.note ? sentence.note+" " : "")+`Full sentence: “${sentence.ru}” = “${sentence.en}”.`,
+    correctDisplay: sentence.ru
+  };
+}
+function genSentenceTranslate(sentence, direction){
+  if(direction==="ru2en"){
+    return {
+      type:"type", kicker:"Russian → English",
+      promptRu:sentence.ru, sub:sentence.tr,
+      accept:sentence.en.replace(/[.!?]$/,""), itemRef:{id:sentence.id, kind:"sentence"},
+      explain:(sentence.note?sentence.note+" ":"")+`“${sentence.ru}” = “${sentence.en}”.`,
+      correctDisplay:sentence.en, lenient:true
+    };
+  }
+  return {
+    type:"type", kicker:"English → Russian",
+    promptEn:sentence.en, sub:"Type it in Russian.",
+    accept:sentence.ru.replace(/[.!?]$/,""), itemRef:{id:sentence.id, kind:"sentence"},
+    explain:(sentence.note?sentence.note+" ":"")+`“${sentence.en}” = “${sentence.ru}”.`,
+    correctDisplay:sentence.ru
+  };
+}
+function genGrammarExercise(topic, q){
+  const options = q.options.map((t,i)=>({text:t, correct:i===q.correct}));
+  return {
+    type:"mc", kicker:topic.title,
+    promptEn:q.prompt, sub:null, options,
+    itemRef:{id:q.id, kind:"grammar"},
+    explain:q.explain,
+    correctDisplay:q.options[q.correct]
+  };
+}
+function genListeningMC(pool, item, tier){
+  const others = sample(pool.filter(s=>s.ru!==item.ru), 3).map(s=>s.ru);
+  const options = shuffle([item.ru, ...others]).map(t=>({text:t, correct:t===item.ru}));
+  return {
+    type:"mc", kicker:"Listening — "+tier.title,
+    audio:{text:item.ru, rate:tier.rate}, sub:"Which phrase did you hear?",
+    options,
+    itemRef:{id:item.id, kind:"sentence"},
+    explain:`“${item.ru}” (${item.tr}) = “${item.en}”.`,
+    correctDisplay:item.ru
+  };
+}
+function genListeningType(item, tier){
+  return {
+    type:"type", kicker:"Listening — "+tier.title+" — Type What You Hear",
+    audio:{text:item.ru, rate:tier.rate}, sub:"Type what you heard, in Russian.",
+    accept:item.ru.replace(/[.!?]$/,""), itemRef:{id:item.id, kind:"sentence"},
+    explain:`“${item.ru}” (${item.tr}) = “${item.en}”.`,
+    correctDisplay:item.ru
+  };
+}
+/* =========================================================================
+   EXERCISE PLAYER — generic runner for mc / type / match / order exercises
+   ========================================================================= */
+const ExercisePlayer = {
+  queue:[], index:0, correctCount:0, results:[], onComplete:null, title:"",
+  answered:false, allowClose:true, requeueWrong:false, extraAttempts:{},
+  matchState:null, orderState:null,
+
+  start(list, opts){
+    opts = opts || {};
+    this.queue = list.slice();
+    this.index = 0;
+    this.correctCount = 0;
+    this.results = [];
+    this.onComplete = opts.onComplete || function(){};
+    this.title = opts.title || "Practice";
+    this.allowClose = opts.allowClose !== false;
+    this.requeueWrong = !!opts.requeueWrong;
+    this.extraAttempts = {};
+    Router.show("exercise");
+    this.answered = false;
+    this.render(); // render() itself calls finish() if the queue is empty
+  },
+  currentEx(){ return this.queue[this.index]; },
+  close(){ Router.back(); },
+  render(){
+    const ex = this.currentEx();
+    if(!ex){ this.finish(); return; }
+    this.answered = false;
+    const root = document.getElementById("view-exercise");
+    const pct = Math.round((this.index/this.queue.length)*100);
+    let body = "";
+    if(ex.type==="mc") body = this._renderMC(ex);
+    else if(ex.type==="type") body = this._renderType(ex);
+    else if(ex.type==="match") body = this._renderMatch(ex);
+    else if(ex.type==="order") body = this._renderOrder(ex);
+    root.innerHTML = `
+      <div id="exercise-wrap">
+        <div class="ex-progress">
+          ${this.allowClose ? `<span class="ex-close" onclick="ExercisePlayer.close()">✕</span>` : ""}
+          <div class="progress-bar"><div style="width:${pct}%"></div></div>
+          <span class="count">${this.index+1} / ${this.queue.length}</span>
+        </div>
+        ${body}
+        <div id="ex-feedback"></div>
+      </div>`;
+    if(ex.audio){
+      setTimeout(()=>Speech.speak(ex.audio.text, ex.audio.rate), 250);
+    }
+  },
+  _kicker(ex){ return `<div class="ex-kicker">${escapeHtml(ex.kicker||"")}</div>`; },
+  _promptBlock(ex){
+    let html = this._kicker(ex);
+    if(ex.audio){
+      html += `<div style="margin:14px 0;">
+        <button type="button" class="btn primary" style="font-size:1.3rem;padding:16px 28px;border-radius:50%;" onclick="Speech.speak('${ex.audio.text.replace(/'/g,"\\'")}', ${ex.audio.rate})" aria-label="Play audio">🔊</button>
+      </div>`;
+      if(ex.promptRu) html += `<div class="ex-prompt ru">${escapeHtml(ex.promptRu)}</div>`;
+    } else if(ex.promptRu){
+      html += `<div class="ex-prompt ru">${escapeHtml(ex.promptRu)}${speakBtn(ex.promptRu,0.85,"")}</div>`;
+    } else if(ex.promptEn){
+      html += `<div class="ex-prompt-en">${escapeHtml(ex.promptEn)}</div>`;
+    }
+    if(ex.sub) html += `<div class="ex-sub">${escapeHtml(ex.sub)}</div>`;
+    return html;
+  },
+  _renderMC(ex){
+    let html = `<div class="ex-card">${this._promptBlock(ex)}<div class="ex-options">`;
+    ex.options.forEach((opt,i)=>{
+      html += `<button type="button" class="opt-btn" data-i="${i}" onclick="ExercisePlayer.chooseMC(${i})">${escapeHtml(opt.text)}</button>`;
+    });
+    html += `</div></div>`;
+    return html;
+  },
+  _renderType(ex){
+    return `<div class="ex-card">${this._promptBlock(ex)}
+      <div class="ex-input-row">
+        <input type="text" class="ex-text-input" id="type-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer…">
+        <button type="button" class="btn primary" onclick="ExercisePlayer.submitType()">Check</button>
+      </div>
+    </div>`;
+  },
+  _renderMatch(ex){
+    const lefts = ex.pairs.map((p,i)=>({text:p[0], i}));
+    const rights = shuffle(ex.pairs.map((p,i)=>({text:p[1], i})));
+    this.matchState = {selectedLeft:null, matched:[], mistakes:0, lefts, rights};
+    let html = `<div class="ex-card">${this._promptBlock(ex)}<div class="match-cols" id="match-cols">`;
+    lefts.forEach((l,idx)=>{ html += `<div class="match-item left" data-side="l" data-idx="${idx}" onclick="ExercisePlayer.matchClick('l',${idx})">${escapeHtml(l.text)}</div>`; });
+    rights.forEach((r,idx)=>{ html += `<div class="match-item right" data-side="r" data-idx="${idx}" onclick="ExercisePlayer.matchClick('r',${idx})">${escapeHtml(r.text)}</div>`; });
+    html += `</div></div>`;
+    return html;
+  },
+  _renderOrder(ex){
+    const tokens = ex.orderTokens.map((t,i)=>({text:t, i}));
+    this.orderState = {pool: shuffle(tokens), placed: []};
+    let html = `<div class="ex-card">${this._promptBlock(ex)}
+      <div class="order-tokens" id="order-slot"></div>
+      <div class="order-pool" id="order-pool"></div>
+      <div style="margin-top:12px;"><button type="button" class="btn sm ghost" onclick="ExercisePlayer.clearOrder()">Clear</button>
+      <button type="button" class="btn sm primary" onclick="ExercisePlayer.submitOrder()">Check</button></div>
+    </div>`;
+    setTimeout(()=>this._paintOrder(), 0);
+    return html;
+  },
+  _paintOrder(){
+    const slot = document.getElementById("order-slot");
+    const pool = document.getElementById("order-pool");
+    if(!slot||!pool) return;
+    slot.innerHTML = this.orderState.placed.map(t=>`<span class="token-btn" onclick="ExercisePlayer.unplaceOrder(${t.i})">${escapeHtml(t.text)}</span>`).join("") || `<span class="muted" style="align-self:center;">Tap words below…</span>`;
+    pool.innerHTML = this.orderState.pool.map(t=>`<button type="button" class="token-btn" onclick="ExercisePlayer.placeOrder(${t.i})">${escapeHtml(t.text)}</button>`).join("");
+  },
+  placeOrder(i){
+    const idx = this.orderState.pool.findIndex(t=>t.i===i);
+    if(idx===-1) return;
+    const [tok] = this.orderState.pool.splice(idx,1);
+    this.orderState.placed.push(tok);
+    this._paintOrder();
+  },
+  unplaceOrder(i){
+    if(this.answered) return;
+    const idx = this.orderState.placed.findIndex(t=>t.i===i);
+    if(idx===-1) return;
+    const [tok] = this.orderState.placed.splice(idx,1);
+    this.orderState.pool.push(tok);
+    this._paintOrder();
+  },
+  clearOrder(){
+    if(this.answered) return;
+    this.orderState.pool = this.orderState.pool.concat(this.orderState.placed);
+    this.orderState.placed = [];
+    this._paintOrder();
+  },
+  submitOrder(){
+    if(this.answered) return;
+    const ex = this.currentEx();
+    const given = this.orderState.placed.map(t=>t.text).join(" ");
+    const correct = given === ex.orderTokens.join(" ");
+    this.answered = true;
+    document.querySelectorAll("#order-pool .token-btn").forEach(b=>b.disabled=true);
+    this._afterAnswer(ex, correct, {given});
+  },
+  matchClick(side, idx){
+    if(this.answered) return;
+    const st = this.matchState;
+    const el = document.querySelector(`.match-item[data-side="${side}"][data-idx="${idx}"]`);
+    if(!el || el.classList.contains("matched")) return;
+    if(side==="l"){
+      document.querySelectorAll('.match-item.left').forEach(e=>e.classList.remove("selected"));
+      st.selectedLeft = idx; el.classList.add("selected");
+      return;
+    }
+    if(st.selectedLeft===null) return;
+    const leftIdx = st.selectedLeft;
+    const leftEl = document.querySelector(`.match-item[data-side="l"][data-idx="${leftIdx}"]`);
+    const isMatch = st.lefts[leftIdx].i === st.rights[idx].i;
+    if(isMatch){
+      leftEl.classList.remove("selected"); leftEl.classList.add("matched");
+      el.classList.add("matched");
+      st.matched.push(leftIdx);
+      st.selectedLeft = null;
+      if(st.matched.length === st.lefts.length){
+        this.answered = true;
+        const ex = this.currentEx();
+        this._afterAnswer(ex, st.mistakes===0, {mistakes:st.mistakes});
+      }
+    } else {
+      st.mistakes++;
+      el.classList.add("mismatch");
+      setTimeout(()=>{ el.classList.remove("mismatch"); leftEl.classList.remove("selected"); }, 450);
+      st.selectedLeft = null;
+    }
+  },
+  chooseMC(i){
+    if(this.answered) return;
+    this.answered = true;
+    const ex = this.currentEx();
+    const opt = ex.options[i];
+    document.querySelectorAll(".opt-btn").forEach((b,bi)=>{
+      b.disabled = true;
+      if(ex.options[bi].correct) b.classList.add("correct");
+      else if(bi===i) b.classList.add("wrong");
+    });
+    this._afterAnswer(ex, !!opt.correct, {chosenOpt:opt});
+  },
+  submitType(){
+    if(this.answered) return;
+    const input = document.getElementById("type-input");
+    const given = input.value;
+    const ex = this.currentEx();
+    const correct = ex.lenient ? answerMatches(given, ex.accept.split("/")[0]) || answerMatches(given, ex.accept) : answerMatches(given, ex.accept);
+    this.answered = true;
+    input.disabled = true;
+    input.classList.add(correct?"correct":"wrong");
+    this._afterAnswer(ex, correct, {given});
+  },
+  _afterAnswer(ex, correct, extra){
+    Store.data.totalAnswered++;
+    if(correct) Store.data.totalCorrect++;
+    if(ex.itemRef){
+      SRS.record(ex.itemRef.id, ex.itemRef.kind, correct);
+      if(!correct && ex.itemRef.kind==="vocab"){
+        Store.data.vocabMistakes[ex.itemRef.id] = (Store.data.vocabMistakes[ex.itemRef.id]||0)+1;
+      }
+    }
+    if(!correct && ex.type==="mc" && extra && extra.chosenOpt && extra.chosenOpt.refId){
+      const correctOpt = ex.options.find(o=>o.correct);
+      if(correctOpt && correctOpt.refId) Confusion.log(correctOpt.refId, extra.chosenOpt.refId);
+    }
+    if(correct){ this.correctCount++; Store.addXp(2); } else { Store.save(); }
+    this.results.push({itemRef:ex.itemRef, correct});
+    if(!correct && this.requeueWrong){
+      const key = ex.itemRef ? ex.itemRef.id : Math.random();
+      this.extraAttempts[key] = (this.extraAttempts[key]||0)+1;
+      if(this.extraAttempts[key] <= 2) this.queue.push(ex);
+    }
+    this._showFeedback(ex, correct);
+  },
+  _showFeedback(ex, correct){
+    const fb = document.getElementById("ex-feedback");
+    const encourage = ["Nice work!","You've got it.","Great — that's sticking.","Solid.","Exactly right."];
+    let html = `<div class="feedback-box ${correct?"correct":"wrong"}">
+      <div class="feedback-title">${correct? pick(encourage) : "Not quite!"}</div>`;
+    if(!correct){
+      html += `<div class="feedback-answer ru">${escapeHtml(ex.correctDisplay||"")}</div>`;
+    }
+    if(ex.explain) html += `<div class="feedback-explain">${escapeHtml(ex.explain)}</div>`;
+    html += `</div><div class="ex-footer"><button type="button" class="btn primary" onclick="ExercisePlayer.next()">Continue</button></div>`;
+    fb.innerHTML = html;
+    fb.scrollIntoView({behavior:"smooth", block:"nearest"});
+  },
+  next(){
+    this.index++;
+    this.render();
+  },
+  finish(){
+    const total = this.results.length;
+    const summary = {correctCount:this.correctCount, total, results:this.results};
+    const cb = this.onComplete;
+    this.onComplete = null;
+    cb(summary);
+  }
+};
+/* =========================================================================
+   CURRICULUM — level metadata + lesson factories
+   ========================================================================= */
+const LEVEL_META = [
+  null,
+  {n:1,  title:"Cyrillic Alphabet",        desc:"Learn to recognize and sound out every letter."},
+  {n:2,  title:"Reading Simple Words",     desc:"Turn letters into words."},
+  {n:3,  title:"Basic Greetings & Phrases",desc:"The essentials for saying hello and being polite."},
+  {n:4,  title:"Core Vocabulary",          desc:"The everyday words you'll use constantly."},
+  {n:5,  title:"Simple Sentences",         desc:"Put words together and see how Russian sentences work."},
+  {n:6,  title:"Present-Tense Verbs",      desc:"Talk about what's happening now."},
+  {n:7,  title:"Questions & Answers",      desc:"Ask and answer the basics: what, who, where, when, why."},
+  {n:8,  title:"Basic Grammar",            desc:"Gender, plurals, pronouns, and possessives."},
+  {n:9,  title:"Past & Future",            desc:"Talk about yesterday and tomorrow."},
+  {n:10, title:"Cases",                    desc:"How Russian shows a word's job with endings, not word order."},
+  {n:11, title:"Natural Conversation",     desc:"Word order flexibility and everyday phrases."},
+  {n:12, title:"Listening to Normal Speech",desc:"Train your ear for how Russian is really spoken."},
+  {n:13, title:"Intermediate Grammar",     desc:"Verb aspect, motion verbs, and reflexive verbs."},
+  {n:14, title:"Conversation Practice",    desc:"Handle real back-and-forth exchanges."},
+  {n:15, title:"Advanced Russian",         desc:"Informal speech and pulling it all together."}
+];
+
+function lessonFromLetterGroup(groupIdx){
+  const letters = lettersInGroup(groupIdx);
+  const info = LETTER_GROUPS[groupIdx-1];
+  return {
+    id:"lvl1_g"+groupIdx, level:1, icon:"🔤", xp:20,
+    title:"Alphabet Group "+groupIdx, subtitle:letters.map(l=>l.up).join("  "),
+    teach(){
+      const cards = [{html:`<h3>${escapeHtml(info.title)}</h3><p class="grammar-block">${escapeHtml(info.note)}</p>`}];
+      letters.forEach(l=>{
+        cards.push({html:`
+          <div class="letter-card">
+            <div class="letter-big">${l.up}&nbsp;&nbsp;${l.lo}</div>
+            <div class="letter-meta"><b>Name:</b> ${escapeHtml(l.name)} <span class="muted translit">(${escapeHtml(l.nameTr)})</span></div>
+            <div class="letter-meta"><b>Sound:</b> ${escapeHtml(l.sound)}</div>
+            <div class="letter-meta" style="margin-top:12px;">
+              <span class="example-ru">${escapeHtml(l.ex)}</span> ${speakBtn(l.ex,0.8)}
+              <div class="muted"><span class="translit">${escapeHtml(l.exTr)}</span> = “${escapeHtml(l.exEn)}”</div>
+            </div>
+          </div>`});
+      });
+      return cards;
+    },
+    buildQuiz(){
+      const pool = ALPHABET.filter(l=>l.group<=groupIdx);
+      let exs = [];
+      letters.forEach(l=>{
+        exs.push(genLetterSoundMC(l, pool));
+        exs.push(genLetterFromSoundMC(l, pool));
+      });
+      return shuffle(exs);
+    }
+  };
+}
+
+function lessonHardSoft(){
+  const qs = [
+    {options:["я, ё, ю, и, е, ь","а, о, у, ы, э"], correct:0, prompt:"Which letters make the CONSONANT before them soft?"},
+    {options:["мат (checkmate)","мать (mother)"], correct:1, prompt:"Which word ends in a SOFT “т”, spelled with a soft sign?"},
+    {options:["Press your tongue toward the roof of your mouth","Round your lips forward"], correct:0, prompt:"How do you physically make a consonant “soft”?"},
+    {options:["брат (brother) — hard р","ты (you) — hard т"], correct:0, prompt:"Both words have hard consonants here — pick the one where the hardness is easiest to hear before “а”."},
+    {options:["It changes the meaning of the whole word","It's just a spelling rule with no effect on pronunciation"], correct:0, prompt:"Why does hard vs. soft actually matter? (Hint: мат vs. мать)"}
+  ];
+  return {
+    id:"lvl1_hardsoft", level:1, icon:"🎛️", xp:20,
+    title:"Hard & Soft Consonants", subtitle:"A key Russian sound pattern",
+    teach(){
+      return [
+        {html:`<h3>Hard & Soft Consonants</h3>
+          <p class="grammar-block">Russian consonants come in two versions: <b>hard</b> and <b>soft</b>. A soft consonant is pronounced with your tongue pressed up toward the roof of your mouth — it sounds a little like a fast, light “y” is squeezed in right after the consonant.</p>
+          <p class="grammar-block">You don't need to memorize a rule for this — you can just look at the very next letter:</p>
+          <div class="compare-box">
+            <div class="half"><div class="k">Hard</div>Followed by а, о, у, ы, э (or nothing)</div>
+            <div class="half"><div class="k">Soft</div>Followed by я, ё, ю, и, е — or by <b>ь</b> (the soft sign)</div>
+          </div>`},
+        {html:`<h3>Hear the difference</h3>
+          <div class="example-line"><span class="ru">мат</span> ${speakBtn("мат",0.8)}<div class="tr">mat (hard т)</div><div class="en">= checkmate</div></div>
+          <div class="example-line"><span class="ru">мать</span> ${speakBtn("мать",0.8)}<div class="tr">mat’ (soft т)</div><div class="en">= mother</div></div>
+          <p class="grammar-block">Same letters, one tiny soft sign — completely different word! This is why the soft sign (ь) matters so much, even though it makes no sound on its own.</p>`},
+        {html:`<h3>More examples</h3>
+          <div class="example-line"><span class="ru">брат</span> ${speakBtn("брат",0.8)}<div class="tr">brat</div><div class="en">brother — hard р</div></div>
+          <div class="example-line"><span class="ru">ряд</span> ${speakBtn("ряд",0.8)}<div class="tr">ryat</div><div class="en">row — soft р (from я)</div></div>
+          <p class="grammar-block">As you learn more words, keep an ear out for this — it's one of the things that makes Russian sound distinctly Russian.</p>`}
+      ];
+    },
+    buildQuiz(){
+      return qs.map((q,i)=>({
+        type:"mc", kicker:"Hard & Soft Consonants",
+        promptEn:q.prompt, sub:null,
+        options:q.options.map((t,oi)=>({text:t, correct:oi===q.correct})),
+        itemRef:null,
+        explain:"Soft consonants (before я/ё/ю/и/е or ь) are pronounced with the tongue raised toward the palate — it's what gives Russian its distinctive sound.",
+        correctDisplay:q.options[q.correct]
+      }));
+    }
+  };
+}
+
+function lessonAlphabetReview(){
+  return {
+    id:"lvl1_review", level:1, icon:"✅", xp:30,
+    title:"Alphabet Review", subtitle:"All 33 letters, mixed",
+    teach(){
+      const grid = ALPHABET.map(l=>`<div style="display:inline-block;width:60px;margin:3px;text-align:center;">
+        <div class="letter-big" style="font-size:1.6rem;">${l.up}${l.lo}</div>
+        <div class="muted" style="font-size:.62rem;">${LETTER_SOUND_KEY[l.up]}</div></div>`).join("");
+      return [{html:`<h3>You know the whole alphabet!</h3>
+        <p class="grammar-block">All 33 letters, start to finish. Skim through them once, then take the mixed review quiz — it'll pull from every group you've learned.</p>
+        <div style="text-align:center;">${grid}</div>`}];
+    },
+    buildQuiz(){
+      const chosen = sample(ALPHABET, 14);
+      return chosen.map(l => Math.random()<0.5 ? genLetterSoundMC(l, ALPHABET) : genLetterFromSoundMC(l, ALPHABET));
+    }
+  };
+}
+
+function lessonFromReadingWords(id, title, words){
+  return {
+    id, level:2, icon:"📖", xp:20, title, subtitle:words.map(w=>w.ru).slice(0,4).join(", ")+"…",
+    teach(){
+      return words.map(w=>({html:`
+        <div class="letter-card">
+          <div class="example-ru" style="font-size:2rem;">${escapeHtml(w.ru)}</div>
+          ${speakBtn(w.ru,0.75)}
+          <div class="letter-meta" style="margin-top:8px;">${escapeHtml(w.tr)} — “${escapeHtml(w.en)}”</div>
+        </div>`}));
+    },
+    buildQuiz(){
+      let exs = [];
+      words.forEach(w=>{ exs.push(genWordReadingMC(w, words)); });
+      sample(words, Math.min(4,words.length)).forEach(w=>exs.push(genWordReadingType(w)));
+      return shuffle(exs);
+    }
+  };
+}
+
+function lessonFromVocabCategory(catKey, level){
+  const cat = VOCAB_CATEGORIES.find(c=>c.key===catKey);
+  const items = vocabByCat(catKey);
+  return {
+    id:"vocab_"+catKey, level, icon:cat.icon, xp:25,
+    title:cat.title, subtitle:items.length+" words",
+    teach(){
+      const cards = [{html:`<h3>${cat.icon} ${escapeHtml(cat.title)}</h3><p class="grammar-block">Read through these, listen to each one, then we'll practice.</p>`}];
+      for(let i=0;i<items.length;i+=6){
+        const chunk = items.slice(i,i+6);
+        cards.push({html: chunk.map(v=>`
+          <div class="vocab-card">
+            <div>
+              <div class="vocab-ru">${escapeHtml(v.ru)}</div>
+              <div class="vocab-tr">${escapeHtml(v.tr)}</div>
+              <div class="vocab-en">${escapeHtml(v.en)}</div>
+            </div>
+            ${speakBtn(v.ru,0.85)}
+          </div>`).join("")});
+      }
+      return cards;
+    },
+    buildQuiz(){
+      let exs = [];
+      items.forEach(v=>{
+        exs.push(genVocabMC(v, Math.random()<0.5?"ru2en":"en2ru", items));
+      });
+      sample(items, Math.min(4,items.length)).forEach(v=>{
+        exs.push(genVocabType(v, "ru2en"));
+      });
+      return shuffle(exs).slice(0, Math.min(14, exs.length));
+    }
+  };
+}
+
+function lessonFromSentenceLevel(sentLevel, level, title){
+  const sents = sentencesByLevel(sentLevel);
+  return {
+    id:"sent_lvl"+sentLevel, level, icon:"📝", xp:30,
+    title, subtitle:sents.length+" sentences",
+    teach(){
+      return sents.map(s=>({html:`
+        <div class="letter-card" style="text-align:left;">
+          <div class="example-ru" style="font-size:1.6rem;">${escapeHtml(s.ru)} ${speakBtn(s.ru,0.85)}</div>
+          <div class="muted tr" style="margin:4px 0;">${escapeHtml(s.tr)}</div>
+          <div style="margin:8px 0;font-weight:700;">“${escapeHtml(s.en)}”</div>
+          <div class="tag-row">${s.breakdown.map(b=>`<span class="pill">${escapeHtml(b[0])} = ${escapeHtml(b[1])}</span>`).join("")}</div>
+          ${s.note?`<p class="grammar-block" style="margin-top:8px;">${escapeHtml(s.note)}</p>`:""}
+        </div>`}));
+    },
+    buildQuiz(){
+      let exs = [];
+      sents.forEach(s=>{
+        const r = Math.random();
+        if(r<0.34) exs.push(genSentenceOrder(s));
+        else if(r<0.67) exs.push(genSentenceMatch(s));
+        else exs.push(genSentenceTranslate(s, Math.random()<0.5?"ru2en":"en2ru"));
+      });
+      return shuffle(exs);
+    }
+  };
+}
+
+function lessonFromGrammar(topicId, level){
+  const topic = grammarById(topicId);
+  return {
+    id:"gram_"+topicId, level, icon:"🧩", xp:25,
+    title:topic.title, subtitle:topic.questions.length+" practice questions",
+    teach(){
+      const cards = [{html:`<h3>${escapeHtml(topic.title)}</h3>` + topic.explain.map(p=>`<p class="grammar-block">${escapeHtml(p)}</p>`).join("")}];
+      cards.push({html:`<h3>Examples</h3>` + topic.examples.map(e=>`
+        <div class="example-line">
+          <span class="ru">${escapeHtml(e.ru)}</span> ${e.tr?speakBtn(e.ru,0.85):""}
+          ${e.tr?`<div class="tr">${escapeHtml(e.tr)}</div>`:""}
+          <div class="en">${escapeHtml(e.en)}</div>
+        </div>`).join("")});
+      return cards;
+    },
+    buildQuiz(){
+      return shuffle(topic.questions.map(q=>genGrammarExercise(topic,q)));
+    }
+  };
+}
+
+function lessonListening(){
+  const pool = sentencesUpTo(12);
+  return {
+    id:"listen_lvl12", level:12, icon:"🎧", xp:30,
+    title:"Listening to Normal Speech", subtitle:"Reductions & connected speech",
+    teach(){
+      return LISTENING_NOTES.map(n=>({html:`<h3>${escapeHtml(n.title)}</h3><p class="grammar-block">${escapeHtml(n.body)}</p>`}));
+    },
+    buildQuiz(){
+      const tier = LISTENING_TIERS[2];
+      return sample(pool, Math.min(10,pool.length)).map(s=>genListeningMC(pool, s, tier));
+    }
+  };
+}
+
+function lessonConversationPractice(){
+  const turns = CONVERSATIONS.filter(c=>c.level>=7).flatMap(c=>c.turns);
+  return {
+    id:"conv_lvl14", level:14, icon:"💬", xp:30,
+    title:"Conversation Practice", subtitle:"Choosing the right reply",
+    teach(){
+      return [{html:`<h3>Real Back-and-Forth</h3>
+        <p class="grammar-block">You'll hear one side of a conversation and pick the reply a Russian speaker would actually say. Full dialogues are always available anytime in the <b>Talk</b> tab — this lesson pulls extra practice from them.</p>`}];
+    },
+    buildQuiz(){
+      return sample(turns, Math.min(10, turns.length)).map(genConversationExercise);
+    }
+  };
+}
+
+function genConversationExercise(turn){
+  const options = shuffle(turn.replies.map(r=>({text:r.ru, correct:r.correct})));
+  const correct = turn.replies.find(r=>r.correct);
+  return {
+    type:"mc", kicker:"Conversation — how do you reply?",
+    audio:{text:turn.bot, rate:0.95}, promptRu:turn.bot, sub:turn.botEn,
+    options,
+    itemRef:null,
+    explain:correct.explain,
+    correctDisplay:correct.ru
+  };
+}
+
+function lessonCapstone(){
+  return {
+    id:"lvl15_capstone", level:15, icon:"🏆", xp:50,
+    title:"Putting It All Together", subtitle:"A mixed review of everything so far",
+    teach(){
+      return [{html:`<h3>Capstone Review</h3>
+        <p class="grammar-block">This lesson pulls a random mix from every part of the course you've completed — letters, words, sentences, and grammar. Treat it like a checkpoint, and revisit the <b>Review</b> tab regularly to keep everything fresh long-term.</p>`}];
+    },
+    buildQuiz(){
+      let exs = [];
+      exs.push(...sample(ALPHABET,4).map(l=>genLetterSoundMC(l, ALPHABET)));
+      exs.push(...sample(VOCAB,6).map(v=>genVocabMC(v, Math.random()<0.5?"ru2en":"en2ru", VOCAB)));
+      exs.push(...sample(SENTENCES,4).map(s=>genSentenceTranslate(s, Math.random()<0.5?"ru2en":"en2ru")));
+      exs.push(...sample(GRAMMAR,3).map(g=>genGrammarExercise(g, pick(g.questions))));
+      return shuffle(exs);
+    }
+  };
+}
+
+/* ---- assemble the full curriculum in learning order ---- */
+const LESSONS = [];
+for(let g=1; g<=7; g++) LESSONS.push(lessonFromLetterGroup(g));
+LESSONS.push(lessonHardSoft());
+LESSONS.push(lessonAlphabetReview());
+LESSONS.push(lessonFromReadingWords("read_short","Short Words", READING_WORDS.slice(0,12)));
+LESSONS.push(lessonFromReadingWords("read_long","Longer Words", READING_WORDS.slice(12)));
+LESSONS.push(lessonFromVocabCategory("greetings", 3));
+["people","family","numbers","food","drinks","places","time","actions","emotions","questions","verbs","adjectives","objects","internet","travel","school"]
+  .forEach(cat=>LESSONS.push(lessonFromVocabCategory(cat, 4)));
+LESSONS.push(lessonFromSentenceLevel(5, 5, "Simple Sentences"));
+LESSONS.push(lessonFromGrammar("present", 6));
+LESSONS.push(lessonFromSentenceLevel(6, 6, "Talking About Now"));
+LESSONS.push(lessonFromSentenceLevel(7, 7, "Asking Questions"));
+["gender","plural","pronouns","possessives","adjectives"].forEach(t=>LESSONS.push(lessonFromGrammar(t, 8)));
+LESSONS.push(lessonFromSentenceLevel(8, 8, "My, Mine & Ours"));
+LESSONS.push(lessonFromGrammar("past", 9));
+LESSONS.push(lessonFromGrammar("future", 9));
+LESSONS.push(lessonFromSentenceLevel(9, 9, "Yesterday & Tomorrow"));
+["cases-intro","prepositional","genitive"].forEach(t=>LESSONS.push(lessonFromGrammar(t, 10)));
+LESSONS.push(lessonFromSentenceLevel(10, 10, "Cases in Action"));
+LESSONS.push(lessonFromGrammar("word-order", 11));
+LESSONS.push(lessonFromSentenceLevel(11, 11, "Natural Phrases"));
+LESSONS.push(lessonListening());
+["aspect","motion","reflexive"].forEach(t=>LESSONS.push(lessonFromGrammar(t, 13)));
+LESSONS.push(lessonConversationPractice());
+LESSONS.push(lessonFromVocabCategory("slang", 15));
+LESSONS.push(lessonCapstone());
+
+LESSONS.forEach((l,i)=>{ l.order=i; });
+function lessonById(id){ return LESSONS.find(l=>l.id===id); }
+function lessonsForLevel(lvl){ return LESSONS.filter(l=>l.level===lvl); }
+function isLessonUnlocked(lesson){
+  if(lesson.order===0) return true;
+  const prev = LESSONS[lesson.order-1];
+  const prog = Store.data.lessonProgress[prev.id];
+  return !!(prog && prog.completed);
+}
+function isLessonCompleted(lesson){
+  const prog = Store.data.lessonProgress[lesson.id];
+  return !!(prog && prog.completed);
+}
+function nextLesson(){
+  return LESSONS.find(l=>!isLessonCompleted(l) && isLessonUnlocked(l)) || LESSONS[LESSONS.length-1];
+}
+function isLevelComplete(lvl){
+  return lessonsForLevel(lvl).every(isLessonCompleted);
+}
+function currentLevelNum(){
+  for(let lvl=1; lvl<=15; lvl++){
+    if(!isLevelComplete(lvl)) return lvl;
+  }
+  return 15;
+}
+/* =========================================================================
+   LESSON PLAYER — teach cards, then quiz, then results
+   ========================================================================= */
+const LessonPlayer = {
+  lesson:null, cards:[], cardIndex:0,
+  start(lesson){
+    this.lesson = lesson;
+    this.cards = lesson.teach();
+    this.cardIndex = 0;
+    Router.show("lesson");
+    this.renderTeach();
+  },
+  renderTeach(){
+    const root = document.getElementById("view-lesson");
+    const card = this.cards[this.cardIndex];
+    const dots = this.cards.map((_,i)=>`<span class="${i===this.cardIndex?"active":""}"></span>`).join("");
+    root.innerHTML = `
+      <div class="teach-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div class="pill">${escapeHtml(LEVEL_META[this.lesson.level].title)}</div>
+          <span class="ex-close" onclick="Router.show('learn')">✕</span>
+        </div>
+        <div style="margin-top:10px;">${card.html}</div>
+        <div class="teach-nav">
+          <button type="button" class="btn ghost" onclick="LessonPlayer.prevCard()" ${this.cardIndex===0?"disabled":""}>Back</button>
+          <div class="teach-dots">${dots}</div>
+          <button type="button" class="btn primary" onclick="LessonPlayer.nextCard()">${this.cardIndex===this.cards.length-1?"Start Quiz →":"Next"}</button>
+        </div>
+      </div>`;
+  },
+  prevCard(){ if(this.cardIndex>0){ this.cardIndex--; this.renderTeach(); } },
+  nextCard(){
+    if(this.cardIndex < this.cards.length-1){ this.cardIndex++; this.renderTeach(); }
+    else this.startQuiz();
+  },
+  startQuiz(){
+    const quiz = this.lesson.buildQuiz();
+    ExercisePlayer.start(quiz, {
+      title:this.lesson.title, allowClose:true, requeueWrong:false,
+      onComplete:(summary)=>this.onQuizDone(summary)
+    });
+  },
+  onQuizDone(summary){
+    const pct = summary.total ? Math.round(summary.correctCount/summary.total*100) : 100;
+    const pass = pct >= 70;
+    const prog = Store.data.lessonProgress[this.lesson.id] || {completed:false,bestScore:0,attempts:0};
+    prog.attempts = (prog.attempts||0) + 1;
+    prog.bestScore = Math.max(prog.bestScore||0, pct);
+    const firstTimePass = pass && !prog.completed;
+    if(pass) prog.completed = true;
+    Store.data.lessonProgress[this.lesson.id] = prog;
+    if(firstTimePass) Store.addXp(this.lesson.xp||20);
+    Store.save();
+    Router.show("lesson");
+    this.renderResults(pct, pass, firstTimePass);
+  },
+  renderResults(pct, pass, firstTimePass){
+    const root = document.getElementById("view-lesson");
+    root.innerHTML = `
+      <div class="teach-card" style="text-align:center;">
+        <div style="font-size:3rem;">${pass?"🎉":"💡"}</div>
+        <h2>${pass?"Lesson Complete!":"Almost There"}</h2>
+        <p class="muted">Score: ${pct}% ${pass?"— nice, that's a pass (70%+)":"— you need 70% to pass"}</p>
+        <div class="progress-bar" style="margin:16px 0;"><div style="width:${pct}%"></div></div>
+        ${firstTimePass?`<p class="pill done">+${this.lesson.xp||20} XP earned</p>`:""}
+        ${!pass?`<p class="grammar-block">No worries — that's exactly what review is for. Go back through the lesson content, then try again.</p>`:""}
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+          <button type="button" class="btn ghost" onclick="Router.show('learn')">Back to Lessons</button>
+          ${pass?`<button type="button" class="btn primary" onclick="Router.show('learn')">Continue</button>`
+                :`<button type="button" class="btn primary" onclick="LessonPlayer.start(LessonPlayer.lesson)">Try Again</button>`}
+        </div>
+      </div>`;
+  }
+};
+/* =========================================================================
+   ROUTER
+   ========================================================================= */
+const Router = {
+  current:"dashboard",
+  returnTo:"dashboard",
+  show(view){
+    const isOverlay = (view==="lesson"||view==="exercise");
+    if(!isOverlay) this.returnTo = view;
+    document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));
+    const el = document.getElementById("view-"+view);
+    if(!el) return;
+    el.classList.remove("hidden");
+    this.current = view;
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.nav===view));
+    window.scrollTo(0,0);
+    const renderers = {
+      dashboard:renderDashboard, learn:renderLearn, practice:renderPractice,
+      review:renderReview, listening:renderListening, vocab:renderVocab,
+      grammar:renderGrammar, conversation:renderConversation, progress:renderProgress
+    };
+    if(renderers[view]) renderers[view]();
+    Store.save();
+  },
+  back(){ this.show(this.returnTo||"dashboard"); }
+};
+
+/* Helpers to map an SRS id back to its underlying data object */
+function letterFromId(id){ return ALPHABET.find(l=>l.id===id); }
+function vocabFromId(id){ return VOCAB.find(v=>v.id===id); }
+function sentenceFromId(id){ return SENTENCES.find(s=>s.id===id); }
+function genReviewExerciseForId(id, kind){
+  try{
+    if(kind==="letter"){ const l=letterFromId(id); if(!l) return null; return Math.random()<0.5?genLetterSoundMC(l,ALPHABET):genLetterFromSoundMC(l,ALPHABET); }
+    if(kind==="vocab"){ const v=vocabFromId(id); if(!v) return null; return Math.random()<0.5?genVocabMC(v,Math.random()<0.5?"ru2en":"en2ru",VOCAB):genVocabType(v,Math.random()<0.5?"ru2en":"en2ru"); }
+    if(kind==="sentence"){ const s=sentenceFromId(id); if(!s) return null; const r=Math.random(); return r<0.34?genSentenceOrder(s):r<0.67?genSentenceMatch(s):genSentenceTranslate(s,Math.random()<0.5?"ru2en":"en2ru"); }
+    if(kind==="grammar"){
+      const topic = GRAMMAR.find(g=>g.questions.some(q=>q.id===id));
+      if(!topic) return null;
+      const q = topic.questions.find(q=>q.id===id);
+      return genGrammarExercise(topic,q);
+    }
+  }catch(e){ return null; }
+  return null;
+}
+
+/* =========================================================================
+   VIEW — DASHBOARD
+   ========================================================================= */
+function renderDashboard(){
+  const root = document.getElementById("view-dashboard");
+  const lvl = currentLevelNum();
+  const meta = LEVEL_META[lvl];
+  const nl = nextLesson();
+  const dueCount = SRS.dueIds().length;
+  const wordsLearned = SRS.allIntroducedIds("vocab").length;
+  const lettersLearned = SRS.allIntroducedIds("letter").length;
+  const totalLessons = LESSONS.length;
+  const completedLessons = LESSONS.filter(isLessonCompleted).length;
+  const confusions = Confusion.top(3);
+  const strugglingVocab = SRS.strugglingIds("vocab",2).slice(0,3).map(vocabFromId).filter(Boolean);
+
+  root.innerHTML = `
+    <div class="hero">
+      <div class="pill">Level ${lvl} of 15</div>
+      <div class="level-name">${escapeHtml(meta.title)}</div>
+      <div class="lesson-name">${escapeHtml(meta.desc)}</div>
+      <div class="progress-bar" style="margin-bottom:14px;"><div style="width:${Math.round(completedLessons/totalLessons*100)}%"></div></div>
+      <button type="button" class="btn primary block" onclick="LessonPlayer.start(lessonById('${nl.id}'))">
+        ▶ Continue Learning: ${escapeHtml(nl.title)}
+      </button>
+    </div>
+
+    <div class="grid-3">
+      <div class="stat-tile"><div class="num">${Store.data.xp}</div><div class="lbl">Total XP</div></div>
+      <div class="stat-tile"><div class="num">🔥${Store.data.streak}</div><div class="lbl">Day Streak</div></div>
+      <div class="stat-tile"><div class="num">${completedLessons}/${totalLessons}</div><div class="lbl">Lessons Done</div></div>
+      <div class="stat-tile"><div class="num">${dueCount}</div><div class="lbl">Review Due</div></div>
+      <div class="stat-tile"><div class="num">${wordsLearned}</div><div class="lbl">Words Learned</div></div>
+      <div class="stat-tile"><div class="num">${lettersLearned}/33</div><div class="lbl">Letters Learned</div></div>
+    </div>
+
+    ${dueCount>0?`
+    <div class="card">
+      <h3>🔁 Review is waiting</h3>
+      <p class="muted">You have ${dueCount} item${dueCount===1?"":"s"} ready for review. A few minutes now keeps them in long-term memory.</p>
+      <button type="button" class="btn primary" onclick="Router.show('review')">Go to Review</button>
+    </div>`:""}
+
+    ${(confusions.length||strugglingVocab.length)?`
+    <div class="card">
+      <h3>🎯 Things You're Struggling With</h3>
+      ${confusions.map(c=>`<div class="confusion-row"><span class="confusion-pair">${escapeHtml(c.pair[0])} / ${escapeHtml(c.pair[1])}</span><span class="muted">mixed up ${c.count} time${c.count===1?"":"s"}</span></div>`).join("")}
+      ${strugglingVocab.map(v=>`<div class="confusion-row"><span class="vocab-ru">${escapeHtml(v.ru)}</span><span class="muted">${escapeHtml(v.en)}</span></div>`).join("")}
+      <button type="button" class="btn sm" style="margin-top:10px;" onclick="Router.show('progress')">See full breakdown</button>
+    </div>`:""}
+
+    <div class="card">
+      <h3>Jump In</h3>
+      <div class="card-row">
+        <button type="button" class="btn" onclick="Router.show('practice')">🎯 Practice</button>
+        <button type="button" class="btn" onclick="Router.show('listening')">🎧 Listening</button>
+        <button type="button" class="btn" onclick="Router.show('conversation')">💬 Conversation</button>
+        <button type="button" class="btn" onclick="Router.show('vocab')">📚 Browse Vocabulary</button>
+      </div>
+    </div>`;
+}
+
+/* =========================================================================
+   VIEW — LEARN (curriculum / lesson list)
+   ========================================================================= */
+function renderLearn(){
+  const root = document.getElementById("view-learn");
+  let html = `<h2 style="margin-bottom:4px;">Learn</h2><p class="muted" style="margin-bottom:18px;">Your path from the alphabet to real conversation.</p>`;
+  for(let lvl=1; lvl<=15; lvl++){
+    const lessons = lessonsForLevel(lvl);
+    if(!lessons.length) continue;
+    const meta = LEVEL_META[lvl];
+    const doneCount = lessons.filter(isLessonCompleted).length;
+    html += `<div class="level-block">
+      <div class="level-header">
+        <div class="lvl-num">${lvl}</div>
+        <div>
+          <h3>${escapeHtml(meta.title)}</h3>
+          <div class="lvl-sub">${escapeHtml(meta.desc)} · ${doneCount}/${lessons.length} complete</div>
+        </div>
+      </div>`;
+    lessons.forEach(lesson=>{
+      const unlocked = isLessonUnlocked(lesson);
+      const completed = isLessonCompleted(lesson);
+      const prog = Store.data.lessonProgress[lesson.id];
+      html += `<div class="lesson-item ${unlocked?"":"locked"}" onclick="${unlocked?`LessonPlayer.start(lessonById('${lesson.id}'))`:`toast('Complete the previous lesson to unlock this one.')`}">
+        <div class="li-ico">${completed?"✅":unlocked?lesson.icon:"🔒"}</div>
+        <div class="li-body">
+          <div class="li-title">${escapeHtml(lesson.title)}</div>
+          <div class="li-sub">${escapeHtml(lesson.subtitle||"")}${prog&&prog.attempts?` · best ${prog.bestScore}%`:""}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  root.innerHTML = html;
+}
+
+/* =========================================================================
+   VIEW — PRACTICE
+   ========================================================================= */
+function introducedLetters(){ return SRS.allIntroducedIds("letter").map(letterFromId).filter(Boolean); }
+function introducedVocab(){ return SRS.allIntroducedIds("vocab").map(vocabFromId).filter(Boolean); }
+function introducedSentences(){ return SRS.allIntroducedIds("sentence").map(sentenceFromId).filter(Boolean); }
+
+function renderPractice(){
+  const root = document.getElementById("view-practice");
+  const letters = introducedLetters();
+  const vocab = introducedVocab();
+  const sentences = introducedSentences();
+  root.innerHTML = `
+    <h2 style="margin-bottom:4px;">Practice</h2>
+    <p class="muted" style="margin-bottom:18px;">Free practice, pulled from everything you've already learned.</p>
+
+    <div class="card">
+      <h3>🔀 Mixed Practice</h3>
+      <p class="muted">A blend of letters, words, and sentences you've learned so far.</p>
+      <button type="button" class="btn primary" onclick="practiceMixed()">Start Mixed Practice</button>
+    </div>
+
+    <div class="card">
+      <h3>🔤 Cyrillic Reading Trainer</h3>
+      <p class="muted">Practice reading Cyrillic — letters and words — without relying on translation.</p>
+      <button type="button" class="btn" onclick="practiceReading()">Start Reading Trainer</button>
+    </div>
+
+    <div class="card">
+      <h3>📚 Vocabulary by Category</h3>
+      <div class="tag-row">
+        ${VOCAB_CATEGORIES.map(c=>{
+          const has = vocabByCat(c.key).some(v=>SRS.get(v.id));
+          return `<button type="button" class="tag-btn" ${has?"":"disabled style=\"opacity:.4;\""} onclick="practiceVocabCategory('${c.key}')">${c.icon} ${escapeHtml(c.title)}</button>`;
+        }).join("")}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🧩 Grammar Drill</h3>
+      <div class="tag-row">
+        ${GRAMMAR.map(g=>{
+          const has = g.questions.some(q=>SRS.get(q.id));
+          return `<button type="button" class="tag-btn" ${has?"":"disabled style=\"opacity:.4;\""} onclick="practiceGrammarTopic('${g.id}')">${escapeHtml(g.title)}</button>`;
+        }).join("")}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📝 Sentence Practice</h3>
+      <p class="muted">${sentences.length? "Word order, matching, and translation with sentences you've learned." : "Complete a sentence-based lesson first to unlock this."}</p>
+      <button type="button" class="btn" ${sentences.length?"":"disabled"} onclick="practiceSentences()">Start Sentence Practice</button>
+    </div>
+  `;
+}
+function sessionPool(kindPool, minCount){
+  return kindPool.length >= minCount ? kindPool : null;
+}
+function practiceMixed(){
+  const letters = introducedLetters(), vocab = introducedVocab(), sentences = introducedSentences();
+  if(letters.length+vocab.length+sentences.length < 4){ toast("Complete a few lessons first to build up your practice pool."); return; }
+  let exs = [];
+  sample(letters, Math.min(4,letters.length)).forEach(l=>exs.push(Math.random()<0.5?genLetterSoundMC(l,ALPHABET):genLetterFromSoundMC(l,ALPHABET)));
+  sample(vocab, Math.min(8,vocab.length)).forEach(v=>exs.push(genVocabMC(v,Math.random()<0.5?"ru2en":"en2ru",VOCAB)));
+  sample(sentences, Math.min(4,sentences.length)).forEach(s=>exs.push(genSentenceTranslate(s,Math.random()<0.5?"ru2en":"en2ru")));
+  ExercisePlayer.start(shuffle(exs), {title:"Mixed Practice", requeueWrong:true, onComplete:s=>showSessionResults(s,"practice")});
+}
+function practiceReading(){
+  const vocab = introducedVocab();
+  const pool = vocab.length>=6 ? vocab : READING_WORDS;
+  let exs = sample(pool, Math.min(12,pool.length)).map(w=> Math.random()<0.7?genWordReadingMC(w,pool):genWordReadingType(w));
+  ExercisePlayer.start(exs, {title:"Reading Trainer", requeueWrong:true, onComplete:s=>showSessionResults(s,"practice")});
+}
+function practiceVocabCategory(catKey){
+  const items = vocabByCat(catKey);
+  if(!items.some(v=>SRS.get(v.id))){ toast("Complete this category's lesson first."); return; }
+  let exs = [];
+  items.forEach(v=>exs.push(genVocabMC(v,Math.random()<0.5?"ru2en":"en2ru",items)));
+  sample(items,Math.min(4,items.length)).forEach(v=>exs.push(genVocabType(v,Math.random()<0.5?"ru2en":"en2ru")));
+  ExercisePlayer.start(shuffle(exs), {title:VOCAB_CATEGORIES.find(c=>c.key===catKey).title, requeueWrong:true, onComplete:s=>showSessionResults(s,"practice")});
+}
+function practiceGrammarTopic(topicId, force){
+  const topic = grammarById(topicId);
+  if(!force && !topic.questions.some(q=>SRS.get(q.id))){ toast("Complete this grammar lesson first."); return; }
+  const exs = shuffle(topic.questions.map(q=>genGrammarExercise(topic,q)));
+  ExercisePlayer.start(exs, {title:topic.title, requeueWrong:true, onComplete:s=>showSessionResults(s,"practice")});
+}
+function practiceSentences(){
+  const sentences = introducedSentences();
+  if(sentences.length<2){ toast("Complete a sentence-based lesson first."); return; }
+  let exs = [];
+  sentences.forEach(s=>{
+    const r = Math.random();
+    exs.push(r<0.34?genSentenceOrder(s):r<0.67?genSentenceMatch(s):genSentenceTranslate(s,Math.random()<0.5?"ru2en":"en2ru"));
+  });
+  ExercisePlayer.start(shuffle(exs), {title:"Sentence Practice", requeueWrong:true, onComplete:s=>showSessionResults(s,"practice")});
+}
+function showSessionResults(summary, returnView){
+  const root = document.getElementById("view-exercise");
+  const pct = summary.total ? Math.round(summary.correctCount/summary.total*100) : 0;
+  root.innerHTML = `
+    <div id="exercise-wrap">
+      <div class="ex-card">
+        <div style="font-size:2.5rem;">${pct>=80?"🌟":pct>=50?"👍":"🌱"}</div>
+        <h2>Session Complete</h2>
+        <p class="muted">You got ${summary.correctCount} of ${summary.total} correct (${pct}%).</p>
+        <div class="progress-bar" style="margin:14px 0;"><div style="width:${pct}%"></div></div>
+        <button type="button" class="btn primary" onclick="Router.show('${returnView}')">Done</button>
+      </div>
+    </div>`;
+}
+
+/* =========================================================================
+   VIEW — REVIEW (spaced repetition queue)
+   ========================================================================= */
+function renderReview(){
+  const root = document.getElementById("view-review");
+  const due = SRS.dueIds();
+  const byKind = {letter:0, vocab:0, sentence:0, grammar:0};
+  due.forEach(id=>{ const k=Store.data.srs[id].kind; byKind[k]=(byKind[k]||0)+1; });
+  const total = Object.values(Store.data.srs).length;
+  const confusions = Confusion.top(6);
+  const strugglingVocab = SRS.strugglingIds("vocab",2).map(vocabFromId).filter(Boolean);
+
+  root.innerHTML = `
+    <h2 style="margin-bottom:4px;">Review</h2>
+    <p class="muted" style="margin-bottom:18px;">Spaced repetition keeps what you've learned from fading. Items come back more often if you miss them, and less often once they stick.</p>
+
+    <div class="card" style="text-align:center;">
+      <div class="stat-tile" style="border:none;padding:6px;"><div class="num">${due.length}</div><div class="lbl">Items Ready for Review</div></div>
+      ${due.length? `
+        <div class="tag-row" style="justify-content:center;">
+          ${byKind.letter?`<span class="pill">${byKind.letter} letters</span>`:""}
+          ${byKind.vocab?`<span class="pill">${byKind.vocab} words</span>`:""}
+          ${byKind.sentence?`<span class="pill">${byKind.sentence} sentences</span>`:""}
+          ${byKind.grammar?`<span class="pill">${byKind.grammar} grammar</span>`:""}
+        </div>
+        <button type="button" class="btn primary block" style="margin-top:14px;" onclick="startReviewSession()">Start Review</button>
+      ` : `<p class="muted">All caught up! ${total? "Come back later as items become due again." : "Complete a lesson to start building your review queue."}</p>`}
+    </div>
+
+    ${(confusions.length||strugglingVocab.length) ? `
+    <div class="card">
+      <h3>🎯 Struggling With</h3>
+      ${confusions.map(c=>`<div class="confusion-row"><span class="confusion-pair">${escapeHtml(c.pair[0])} vs ${escapeHtml(c.pair[1])}</span><span class="muted">confused ${c.count}×</span></div>`).join("")}
+      ${strugglingVocab.map(v=>`<div class="confusion-row"><span class="vocab-ru">${escapeHtml(v.ru)}</span><span class="muted">${escapeHtml(v.en)}</span></div>`).join("")}
+      <button type="button" class="btn sm" style="margin-top:10px;" onclick="startTargetedPractice()">Practice These Now</button>
+    </div>` : ""}
+  `;
+}
+function startReviewSession(){
+  const due = SRS.dueIds();
+  let exs = due.map(id=>genReviewExerciseForId(id, Store.data.srs[id].kind)).filter(Boolean);
+  ExercisePlayer.start(shuffle(exs), {title:"Review", requeueWrong:true, onComplete:s=>showSessionResults(s,"review")});
+}
+function startTargetedPractice(){
+  const confusions = Confusion.top(6);
+  const strugglingVocab = SRS.strugglingIds("vocab",2).map(vocabFromId).filter(Boolean);
+  let exs = [];
+  confusions.forEach(c=>{
+    const l1 = ALPHABET.find(l=>l.up===c.pair[0]), l2 = ALPHABET.find(l=>l.up===c.pair[1]);
+    if(l1) exs.push(genLetterSoundMC(l1, ALPHABET)); if(l1) exs.push(genLetterFromSoundMC(l1, ALPHABET));
+    if(l2) exs.push(genLetterSoundMC(l2, ALPHABET)); if(l2) exs.push(genLetterFromSoundMC(l2, ALPHABET));
+  });
+  strugglingVocab.forEach(v=>{
+    exs.push(genVocabMC(v,"ru2en",VOCAB)); exs.push(genVocabType(v,"ru2en"));
+  });
+  if(!exs.length){ toast("Nothing to target yet — keep practicing!"); return; }
+  ExercisePlayer.start(shuffle(exs), {title:"Targeted Practice", requeueWrong:true, onComplete:s=>showSessionResults(s,"review")});
+}
+/* =========================================================================
+   VIEW — LISTENING
+   ========================================================================= */
+function renderListening(){
+  const root = document.getElementById("view-listening");
+  const warn = !Speech.available ? `
+    <div class="card" style="border-color:var(--warn);background:var(--warn-bg);">
+      <h3>⚠️ No speech support detected</h3>
+      <p class="muted">Your browser doesn't support text-to-speech, so audio playback won't work here. Everything else in the app still works fine — try Chrome, Edge, or Safari for listening practice.</p>
+    </div>` : "";
+  root.innerHTML = `
+    <h2 style="margin-bottom:4px;">Listening</h2>
+    <p class="muted" style="margin-bottom:18px;">Reading Cyrillic and recognizing it spoken quickly are two different skills. This trains the second one.</p>
+    ${warn}
+    ${LISTENING_TIERS.map(t=>`
+      <div class="card">
+        <div class="card-row" style="justify-content:space-between;align-items:center;">
+          <div>
+            <h3>Level ${t.tier} — ${escapeHtml(t.title)}</h3>
+            <p class="muted" style="margin-bottom:0;">${escapeHtml(t.note)}</p>
+          </div>
+          <button type="button" class="btn primary" ${Speech.available?"":"disabled"} onclick="startListening(${t.tier})">Start</button>
+        </div>
+      </div>`).join("")}
+    <div class="card">
+      <h3>🗣️ Connected Speech — What to Listen For</h3>
+      ${LISTENING_NOTES.map(n=>`<p class="grammar-block"><b>${escapeHtml(n.title)}</b><br>${escapeHtml(n.body)}</p>`).join("")}
+    </div>
+  `;
+}
+function startListening(tierNum){
+  const tier = LISTENING_TIERS[tierNum-1];
+  let pool = tierNum<=2 ? sentencesUpTo(9) : SENTENCES;
+  if(pool.length<4) pool = SENTENCES;
+  const chosen = sample(pool, Math.min(10,pool.length));
+  const exs = chosen.map(s=>{
+    if(tierNum<=2) return genListeningMC(pool, s, tier);
+    if(tierNum===3) return Math.random()<0.6 ? genListeningMC(pool,s,tier) : genListeningType(s,tier);
+    return Math.random()<0.3 ? genListeningMC(pool,s,tier) : genListeningType(s,tier);
+  });
+  ExercisePlayer.start(exs, {title:"Listening — "+tier.title, requeueWrong:true, onComplete:s=>showSessionResults(s,"listening")});
+}
+
+/* =========================================================================
+   VIEW — VOCABULARY BROWSER
+   ========================================================================= */
+const VocabView = { openCat:null };
+function renderVocab(){
+  const root = document.getElementById("view-vocab");
+  let html = `<h2 style="margin-bottom:4px;">Vocabulary</h2><p class="muted" style="margin-bottom:18px;">Browse every word, grouped by topic. Tap a category to open it.</p>`;
+  VOCAB_CATEGORIES.forEach(cat=>{
+    const items = vocabByCat(cat.key);
+    const learned = items.filter(v=>SRS.get(v.id)).length;
+    const open = VocabView.openCat === cat.key;
+    html += `<div class="card">
+      <div class="card-row" style="justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleVocabCat('${cat.key}')">
+        <h3>${cat.icon} ${escapeHtml(cat.title)}</h3>
+        <span class="pill ${learned===items.length&&items.length?"done":""}">${learned}/${items.length} learned</span>
+      </div>
+      ${open ? items.map(v=>{
+        const mastery = SRS.get(v.id) ? SRS.masteryLabel(SRS.get(v.id)) : "not started";
+        return `<div class="vocab-card">
+          <div>
+            <div class="vocab-ru">${escapeHtml(v.ru)}</div>
+            <div class="vocab-tr">${escapeHtml(v.tr)}</div>
+            <div class="vocab-en">${escapeHtml(v.en)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="pill ${mastery==="mastered"?"done":mastery==="not started"?"locked":"warn"}">${mastery}</span>
+            ${speakBtn(v.ru,0.85)}
+          </div>
+        </div>`;
+      }).join("") + `<button type="button" class="btn sm" style="margin-top:10px;" onclick="event.stopPropagation();practiceVocabCategory('${cat.key}')">Practice this category</button>`
+      : ""}
+    </div>`;
+  });
+  root.innerHTML = html;
+}
+function toggleVocabCat(key){
+  VocabView.openCat = VocabView.openCat===key ? null : key;
+  renderVocab();
+}
+
+/* =========================================================================
+   VIEW — GRAMMAR BROWSER
+   ========================================================================= */
+const GrammarView = { openTopic:null };
+function renderGrammar(){
+  const root = document.getElementById("view-grammar");
+  if(GrammarView.openTopic){
+    const topic = grammarById(GrammarView.openTopic);
+    root.innerHTML = `
+      <div class="teach-card">
+        <span class="ex-close" onclick="GrammarView.openTopic=null;renderGrammar();">✕ Back</span>
+        <h2 style="margin-top:10px;">${escapeHtml(topic.title)}</h2>
+        ${topic.explain.map(p=>`<p class="grammar-block">${escapeHtml(p)}</p>`).join("")}
+        <h3>Examples</h3>
+        ${topic.examples.map(e=>`
+          <div class="example-line">
+            <span class="ru">${escapeHtml(e.ru)}</span> ${e.tr?speakBtn(e.ru,0.85):""}
+            ${e.tr?`<div class="tr">${escapeHtml(e.tr)}</div>`:""}
+            <div class="en">${escapeHtml(e.en)}</div>
+          </div>`).join("")}
+        <button type="button" class="btn primary block" style="margin-top:16px;" onclick="practiceGrammarTopic('${topic.id}', true)">Practice This Topic</button>
+      </div>`;
+    return;
+  }
+  let html = `<h2 style="margin-bottom:4px;">Grammar</h2><p class="muted" style="margin-bottom:18px;">Explained through examples, not jargon. Tap a topic to read it.</p>`;
+  LEVEL_META.forEach((meta,lvl)=>{
+    const topics = GRAMMAR.filter(g=>g.level===lvl);
+    if(!topics.length) return;
+    html += `<div class="section-title">Level ${lvl} · ${escapeHtml(meta.title)}</div>`;
+    topics.forEach(g=>{
+      const done = g.questions.every(q=>{ const it=SRS.get(q.id); return it && it.box>=2; });
+      html += `<div class="lesson-item" onclick="GrammarView.openTopic='${g.id}';renderGrammar();">
+        <div class="li-ico">🧩</div>
+        <div class="li-body">
+          <div class="li-title">${escapeHtml(g.title)}</div>
+          <div class="li-sub">${escapeHtml(g.explain[0].slice(0,90))}${g.explain[0].length>90?"…":""}</div>
+        </div>
+        ${done?`<span class="check-badge">✅</span>`:""}
+      </div>`;
+    });
+  });
+  root.innerHTML = html;
+}
+
+/* =========================================================================
+   VIEW — CONVERSATION SIMULATOR
+   ========================================================================= */
+function renderConversation(){
+  ConversationPlayer.conv = null;
+  const root = document.getElementById("view-conversation");
+  let html = `<h2 style="margin-bottom:4px;">Conversation</h2><p class="muted" style="margin-bottom:18px;">Read (and hear) the other side, then pick the reply a Russian speaker would actually give.</p>`;
+  CONVERSATIONS.forEach(c=>{
+    const done = Store.data.conversationProgress[c.id] && Store.data.conversationProgress[c.id].done;
+    const difficulty = c.level<=5?"Beginner":c.level<=10?"Intermediate":"Advanced";
+    html += `<div class="lesson-item" onclick="ConversationPlayer.start('${c.id}')">
+      <div class="li-ico">${done?"✅":"💬"}</div>
+      <div class="li-body">
+        <div class="li-title">${escapeHtml(c.title)}</div>
+        <div class="li-sub">${escapeHtml(c.desc)}</div>
+      </div>
+      <span class="pill">${difficulty}</span>
+    </div>`;
+  });
+  root.innerHTML = html;
+}
+const ConversationPlayer = {
+  conv:null, turnIndex:0, log:[], answered:false,
+  start(convId){
+    Router.show("conversation");
+    this.conv = CONVERSATIONS.find(c=>c.id===convId);
+    this.turnIndex = 0; this.log = []; this.answered = false;
+    this.log.push({side:"bot", ru:this.conv.turns[0].bot, tr:this.conv.turns[0].botTr, en:this.conv.turns[0].botEn});
+    this.paint();
+    setTimeout(()=>Speech.speak(this.conv.turns[0].bot, 0.92), 300);
+  },
+  exit(){ Router.show("conversation"); },
+  paint(){
+    const root = document.getElementById("view-conversation");
+    const turn = this.conv.turns[this.turnIndex];
+    let chatHtml = this.log.map(m=>{
+      if(m.side==="bot"){
+        return `<div class="chat-bubble bot ru">${escapeHtml(m.ru)}${speakBtn(m.ru,0.9)}<span class="tr">${escapeHtml(m.tr||"")} — ${escapeHtml(m.en||"")}</span></div>`;
+      }
+      return `<div class="chat-bubble user ru" style="align-self:flex-end;">${escapeHtml(m.ru)}<span class="tr">${escapeHtml(m.en||"")}</span></div>`;
+    }).join("");
+
+    let bottom = "";
+    if(!this.answered){
+      const opts = turn.replies.map((r,i)=>({...r, i}));
+      const shuffled = shuffle(opts);
+      bottom = `<div class="ex-options">` + shuffled.map(r=>`<button type="button" class="opt-btn" onclick="ConversationPlayer.choose(${r.i})">${escapeHtml(r.ru)}</button>`).join("") + `</div>`;
+    } else {
+      const last = this.lastResult;
+      bottom = `<div class="feedback-box ${last.correct?"correct":"wrong"}">
+        <div class="feedback-title">${last.correct?"Nice — natural reply!":"Not quite the natural reply"}</div>
+        ${!last.correct?`<div class="feedback-answer ru">${escapeHtml(last.correctReply.ru)}</div>`:""}
+        <div class="feedback-explain">${escapeHtml(last.explain)}</div>
+      </div>
+      <div class="ex-footer"><button type="button" class="btn primary" onclick="ConversationPlayer.advance()">${this.turnIndex<this.conv.turns.length-1?"Continue":"Finish"}</button></div>`;
+    }
+    root.innerHTML = `
+      <div id="exercise-wrap">
+        <div class="ex-progress"><span class="ex-close" onclick="ConversationPlayer.exit()">✕</span>
+          <div class="progress-bar"><div style="width:${Math.round((this.turnIndex)/this.conv.turns.length*100)}%"></div></div>
+          <span class="count">${this.turnIndex+1} / ${this.conv.turns.length}</span>
+        </div>
+        <div class="chat-log">${chatHtml}</div>
+        ${bottom}
+      </div>`;
+  },
+  choose(i){
+    if(this.answered) return;
+    this.answered = true;
+    const turn = this.conv.turns[this.turnIndex];
+    const chosen = turn.replies[i];
+    const correctReply = turn.replies.find(r=>r.correct);
+    Store.data.totalAnswered++;
+    if(chosen.correct){ Store.data.totalCorrect++; Store.addXp(3); }
+    Store.save();
+    this.log.push({side:"user", ru:correctReply.ru, en:correctReply.en});
+    this.lastResult = {correct:chosen.correct, correctReply, explain:chosen.explain};
+    this.paint();
+  },
+  advance(){
+    if(this.turnIndex < this.conv.turns.length-1){
+      this.turnIndex++;
+      this.answered = false;
+      const nextTurn = this.conv.turns[this.turnIndex];
+      this.log.push({side:"bot", ru:nextTurn.bot, tr:nextTurn.botTr, en:nextTurn.botEn});
+      this.paint();
+      setTimeout(()=>Speech.speak(nextTurn.bot, 0.92), 300);
+    } else {
+      Store.data.conversationProgress[this.conv.id] = {done:true};
+      Store.addXp(15);
+      Store.save();
+      const root = document.getElementById("view-conversation");
+      root.innerHTML = `<div id="exercise-wrap"><div class="ex-card">
+        <div style="font-size:2.5rem;">🎉</div>
+        <h2>Conversation Complete</h2>
+        <p class="muted">+15 XP</p>
+        <button type="button" class="btn primary" onclick="Router.show('conversation')">Back to Conversations</button>
+      </div></div>`;
+    }
+  }
+};
+
+/* =========================================================================
+   VIEW — PROGRESS
+   ========================================================================= */
+function renderProgress(){
+  const root = document.getElementById("view-progress");
+  const srsEntries = Object.entries(Store.data.srs);
+  const byKind = {letter:[], vocab:[], sentence:[], grammar:[]};
+  srsEntries.forEach(([id,it])=>{ if(byKind[it.kind]) byKind[it.kind].push(it); });
+  const masteryCounts = kind => {
+    const arr = byKind[kind];
+    return {
+      learning: arr.filter(it=>it.box<=1).length,
+      familiar: arr.filter(it=>it.box>=2&&it.box<=3).length,
+      mastered: arr.filter(it=>it.box>=4).length,
+      total: arr.length
+    };
+  };
+  const confusions = Confusion.top(10);
+  const strugglingVocab = SRS.strugglingIds("vocab",2).map(vocabFromId).filter(Boolean);
+  const accuracy = Store.data.totalAnswered ? Math.round(Store.data.totalCorrect/Store.data.totalAnswered*100) : 0;
+
+  function masteryBar(kind,label){
+    const m = masteryCounts(kind);
+    if(!m.total) return `<div class="muted" style="margin-bottom:10px;">${label}: nothing introduced yet.</div>`;
+    return `<div style="margin-bottom:14px;">
+      <div class="card-row" style="justify-content:space-between;"><b>${label}</b><span class="muted">${m.total} introduced</span></div>
+      <div class="progress-bar" style="margin:6px 0;overflow:hidden;display:flex;">
+        <div style="width:${m.learning/m.total*100}%;background:var(--error);"></div>
+        <div style="width:${m.familiar/m.total*100}%;background:var(--warn);"></div>
+        <div style="width:${m.mastered/m.total*100}%;background:var(--success);"></div>
+      </div>
+      <div class="muted" style="font-size:.78rem;">🔴 ${m.learning} learning · 🟡 ${m.familiar} familiar · 🟢 ${m.mastered} mastered</div>
+    </div>`;
+  }
+
+  root.innerHTML = `
+    <h2 style="margin-bottom:4px;">Progress</h2>
+    <p class="muted" style="margin-bottom:18px;">Everything here lives only in this browser — no account, no server.</p>
+
+    <div class="grid-3">
+      <div class="stat-tile"><div class="num">${currentLevelNum()}</div><div class="lbl">Current Level</div></div>
+      <div class="stat-tile"><div class="num">${Store.data.xp}</div><div class="lbl">Total XP</div></div>
+      <div class="stat-tile"><div class="num">${accuracy}%</div><div class="lbl">Overall Accuracy</div></div>
+      <div class="stat-tile"><div class="num">🔥${Store.data.streak}</div><div class="lbl">Day Streak</div></div>
+      <div class="stat-tile"><div class="num">${LESSONS.filter(isLessonCompleted).length}/${LESSONS.length}</div><div class="lbl">Lessons Complete</div></div>
+      <div class="stat-tile"><div class="num">${Store.data.totalAnswered}</div><div class="lbl">Questions Answered</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Mastery Breakdown</h3>
+      ${masteryBar("letter","Letters")}
+      ${masteryBar("vocab","Vocabulary")}
+      ${masteryBar("sentence","Sentences")}
+      ${masteryBar("grammar","Grammar")}
+    </div>
+
+    <div class="card">
+      <h3>🎯 Things You're Struggling With</h3>
+      ${confusions.length ? `<p class="muted">Letters you frequently mix up:</p>` + confusions.map(c=>`<div class="confusion-row"><span class="confusion-pair">${escapeHtml(c.pair[0])} vs ${escapeHtml(c.pair[1])}</span><span class="muted">${c.count} mix-up${c.count===1?"":"s"}</span></div>`).join("") : ""}
+      ${strugglingVocab.length ? `<p class="muted" style="margin-top:10px;">Words that keep tripping you up:</p>` + strugglingVocab.map(v=>`<div class="confusion-row"><span class="vocab-ru">${escapeHtml(v.ru)}</span><span class="muted">${escapeHtml(v.en)}</span></div>`).join("") : ""}
+      ${(!confusions.length && !strugglingVocab.length) ? `<p class="muted">Nothing flagged yet — keep practicing and patterns will show up here.</p>` : `<button type="button" class="btn sm" style="margin-top:10px;" onclick="startTargetedPractice()">Practice These Now</button>`}
+    </div>
+
+    <div class="card">
+      <h3>Levels by the Numbers</h3>
+      <table class="simple"><thead><tr><th>Level</th><th>Title</th><th>Lessons</th></tr></thead><tbody>
+      ${LEVEL_META.slice(1).map((m,i)=>{
+        const lvl=i+1; const lessons=lessonsForLevel(lvl); if(!lessons.length) return "";
+        const done = lessons.filter(isLessonCompleted).length;
+        return `<tr><td>${lvl}</td><td>${escapeHtml(m.title)}</td><td>${done}/${lessons.length}</td></tr>`;
+      }).join("")}
+      </tbody></table>
+    </div>
+
+    <div class="card">
+      <h3>Settings</h3>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;">
+        <input type="checkbox" id="translit-toggle" ${Store.data.showTranslit?"checked":""} onchange="toggleTranslit(this.checked)">
+        Show English-style pronunciation help (e.g. “pree-VYET”)
+      </label>
+      <p class="muted" style="margin-bottom:14px;">Turn this off once you're comfortable reading Cyrillic directly — that's the real goal.</p>
+      <button type="button" class="btn" style="border-color:var(--error);color:var(--error);" onclick="confirmReset()">Reset All Progress</button>
+    </div>
+  `;
+}
+function toggleTranslit(checked){
+  Store.data.showTranslit = checked;
+  Store.save();
+  document.body.classList.toggle("hide-translit", !checked);
+}
+function confirmReset(){
+  if(confirm("This will permanently erase all your progress, XP, and review history on this device. This can't be undone. Continue?")){
+    Store.reset();
+    toast("Progress reset.");
+    Router.show("dashboard");
+  }
+}
+/* =========================================================================
+   TOPBAR / THEME / INIT
+   ========================================================================= */
+function updateTopbar(){
+  const s = document.getElementById("streak-num");
+  const x = document.getElementById("xp-num");
+  if(s) s.textContent = Store.data.streak;
+  if(x) x.textContent = Store.data.xp;
+}
+function systemPrefersDark(){
+  return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+function applyTheme(){
+  const t = Store.data.theme;
+  if(t==="dark") document.documentElement.setAttribute("data-theme","dark");
+  else if(t==="light") document.documentElement.setAttribute("data-theme","light");
+  else document.documentElement.removeAttribute("data-theme");
+  const btn = document.getElementById("theme-toggle");
+  const effectiveDark = t==="dark" || (!t && systemPrefersDark());
+  if(btn) btn.textContent = effectiveDark ? "☀️" : "🌙";
+}
+function toggleTheme(){
+  const effectiveDark = Store.data.theme==="dark" || (!Store.data.theme && systemPrefersDark());
+  Store.data.theme = effectiveDark ? "light" : "dark";
+  Store.save();
+  applyTheme();
+}
+function init(){
+  Store.load();
+  Speech.init();
+  applyTheme();
+  document.body.classList.toggle("hide-translit", !Store.data.showTranslit);
+  updateTopbar();
+  document.addEventListener("click", function(e){
+    const t = e.target.closest("[data-nav]");
+    if(t) Router.show(t.dataset.nav);
+  });
+  const themeBtn = document.getElementById("theme-toggle");
+  if(themeBtn) themeBtn.addEventListener("click", toggleTheme);
+  window.addEventListener("keydown", function(e){
+    if(e.key==="Enter"){
+      const input = document.getElementById("type-input");
+      if(input && document.activeElement===input) ExercisePlayer.submitType();
+    }
+  });
+  Router.show("dashboard");
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
